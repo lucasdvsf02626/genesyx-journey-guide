@@ -573,12 +573,89 @@ function KpiCard({
   );
 }
 
-function Legend({ swatch, label }: { swatch: string; label: string }) {
+function Legend({ swatch, label, dashed }: { swatch: string; label: string; dashed?: boolean }) {
   return (
-    <span className="hidden items-center gap-1.5 md:inline-flex">
-      <span className="h-2.5 w-2.5 rounded-full" style={{ background: swatch }} />
+    <span className="inline-flex items-center gap-1.5">
+      {dashed ? (
+        <span
+          className="inline-block h-0 w-4 border-t-2 border-dashed"
+          style={{ borderColor: swatch }}
+        />
+      ) : (
+        <span className="h-2.5 w-2.5 rounded-full" style={{ background: swatch }} />
+      )}
       {label}
     </span>
+  );
+}
+
+function formatFullDate(iso: string) {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function PhTooltip({ active, payload }: TooltipProps<number, string>) {
+  if (!active || !payload || !payload.length) return null;
+  const p = payload[0].payload as { date: string; value: number | null };
+  const status = p.value != null ? phStatus(p.value) : null;
+  return (
+    <div className="rounded-xl border border-border bg-popover px-3 py-2 text-[12px] shadow-lg">
+      <p className="font-medium text-foreground">{formatFullDate(p.date)}</p>
+      {p.value != null ? (
+        <>
+          <div className="mt-1 flex items-baseline gap-2">
+            <span className="font-display text-[18px] font-semibold text-foreground">
+              {p.value.toFixed(1)}
+            </span>
+            <span className="text-muted-foreground">pH</span>
+          </div>
+          {status && (
+            <div className="mt-1 flex items-center gap-1.5">
+              <span
+                className="h-2 w-2 rounded-full"
+                style={{ background: PH_STATUS_COLOR[status] }}
+              />
+              <span style={{ color: PH_STATUS_COLOR[status] }} className="font-medium">
+                {PH_STATUS_LABEL[status]}
+              </span>
+            </div>
+          )}
+        </>
+      ) : (
+        <p className="mt-1 text-muted-foreground">No reading logged</p>
+      )}
+    </div>
+  );
+}
+
+function HydrationTooltip({ active, payload }: TooltipProps<number, string>) {
+  if (!active || !payload || !payload.length) return null;
+  const p = payload[0].payload as { fullDate: string; ml: number; pct: number };
+  const delta = p.ml - WATER_TARGET_ML;
+  return (
+    <div className="rounded-xl border border-border bg-popover px-3 py-2 text-[12px] shadow-lg">
+      <p className="font-medium text-foreground">{formatFullDate(p.fullDate)}</p>
+      <div className="mt-1 flex items-baseline gap-2">
+        <span className="font-display text-[18px] font-semibold text-foreground">
+          {(p.ml / 1000).toFixed(2)}L
+        </span>
+        <span className="text-muted-foreground">/ 2.4L</span>
+      </div>
+      <div className="mt-1 flex items-center gap-2">
+        <span className="rounded-md bg-[var(--color-electric-blue,#57A1CE)]/15 px-1.5 py-0.5 font-medium text-[var(--color-electric-blue,#57A1CE)]">
+          {p.pct}% of target
+        </span>
+        {p.ml > 0 && (
+          <span className="text-muted-foreground">
+            {delta >= 0 ? `+${(delta / 1000).toFixed(2)}L over` : `${(delta / 1000).toFixed(2)}L to go`}
+          </span>
+        )}
+      </div>
+    </div>
   );
 }
 
