@@ -20,6 +20,8 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/use-auth";
+import { BrandLogo } from "@/components/genesyx/BrandLogo";
+
 
 type NavItem = { title: string; url: string; icon: typeof LayoutDashboard; exact?: boolean };
 const nav: NavItem[] = [
@@ -45,16 +47,13 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border">
-        <Link to="/app" className="flex items-center gap-2.5 px-1.5 py-1.5">
-          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground text-[13px] font-bold">
-            G
-          </div>
-          <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-            <p className="truncate text-[13.5px] font-semibold leading-tight">Genesyx</p>
-            <p className="truncate text-[11px] text-muted-foreground">Fertility workspace</p>
-          </div>
+        <Link to="/app" className="flex items-center gap-2 px-1 py-1.5" aria-label="Genesyx">
+          <BrandLogo variant="full" size={28} className="group-data-[collapsible=icon]:hidden" />
+          <BrandLogo variant="mark" size={28} className="hidden group-data-[collapsible=icon]:inline-flex" />
         </Link>
+
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Workspace</SidebarGroupLabel>
