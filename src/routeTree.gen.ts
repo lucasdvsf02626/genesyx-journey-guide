@@ -15,8 +15,15 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as HealthDisclaimerRouteImport } from './routes/health-disclaimer'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as InviteCodeRouteImport } from './routes/invite.$code'
+import { Route as AppTrackRouteImport } from './routes/app.track'
+import { Route as AppProfileRouteImport } from './routes/app.profile'
+import { Route as AppNutritionRouteImport } from './routes/app.nutrition'
+import { Route as AppLogRouteImport } from './routes/app.log'
+import { Route as AppInsightsRouteImport } from './routes/app.insights'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -48,26 +55,68 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
 } as any)
 const InviteCodeRoute = InviteCodeRouteImport.update({
   id: '/invite/$code',
   path: '/invite/$code',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppTrackRoute = AppTrackRouteImport.update({
+  id: '/track',
+  path: '/track',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNutritionRoute = AppNutritionRouteImport.update({
+  id: '/nutrition',
+  path: '/nutrition',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLogRoute = AppLogRouteImport.update({
+  id: '/log',
+  path: '/log',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInsightsRoute = AppInsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/health-disclaimer': typeof HealthDisclaimerRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/app/insights': typeof AppInsightsRoute
+  '/app/log': typeof AppLogRoute
+  '/app/nutrition': typeof AppNutritionRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/track': typeof AppTrackRoute
   '/invite/$code': typeof InviteCodeRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -77,30 +126,50 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/app/insights': typeof AppInsightsRoute
+  '/app/log': typeof AppLogRoute
+  '/app/nutrition': typeof AppNutritionRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/track': typeof AppTrackRoute
   '/invite/$code': typeof InviteCodeRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/health-disclaimer': typeof HealthDisclaimerRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/app/insights': typeof AppInsightsRoute
+  '/app/log': typeof AppLogRoute
+  '/app/nutrition': typeof AppNutritionRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/track': typeof AppTrackRoute
   '/invite/$code': typeof InviteCodeRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/app'
     | '/auth'
     | '/health-disclaimer'
     | '/privacy'
     | '/reset-password'
     | '/support'
     | '/terms'
+    | '/app/insights'
+    | '/app/log'
+    | '/app/nutrition'
+    | '/app/profile'
+    | '/app/track'
     | '/invite/$code'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -110,21 +179,35 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/support'
     | '/terms'
+    | '/app/insights'
+    | '/app/log'
+    | '/app/nutrition'
+    | '/app/profile'
+    | '/app/track'
     | '/invite/$code'
+    | '/app'
   id:
     | '__root__'
     | '/'
+    | '/app'
     | '/auth'
     | '/health-disclaimer'
     | '/privacy'
     | '/reset-password'
     | '/support'
     | '/terms'
+    | '/app/insights'
+    | '/app/log'
+    | '/app/nutrition'
+    | '/app/profile'
+    | '/app/track'
     | '/invite/$code'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
   HealthDisclaimerRoute: typeof HealthDisclaimerRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -178,12 +261,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
     }
     '/invite/$code': {
       id: '/invite/$code'
@@ -192,11 +289,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InviteCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/track': {
+      id: '/app/track'
+      path: '/track'
+      fullPath: '/app/track'
+      preLoaderRoute: typeof AppTrackRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/profile': {
+      id: '/app/profile'
+      path: '/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/nutrition': {
+      id: '/app/nutrition'
+      path: '/nutrition'
+      fullPath: '/app/nutrition'
+      preLoaderRoute: typeof AppNutritionRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/log': {
+      id: '/app/log'
+      path: '/log'
+      fullPath: '/app/log'
+      preLoaderRoute: typeof AppLogRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/insights': {
+      id: '/app/insights'
+      path: '/insights'
+      fullPath: '/app/insights'
+      preLoaderRoute: typeof AppInsightsRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppInsightsRoute: typeof AppInsightsRoute
+  AppLogRoute: typeof AppLogRoute
+  AppNutritionRoute: typeof AppNutritionRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppTrackRoute: typeof AppTrackRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppInsightsRoute: AppInsightsRoute,
+  AppLogRoute: AppLogRoute,
+  AppNutritionRoute: AppNutritionRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppTrackRoute: AppTrackRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
   HealthDisclaimerRoute: HealthDisclaimerRoute,
   PrivacyRoute: PrivacyRoute,
@@ -208,13 +361,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
