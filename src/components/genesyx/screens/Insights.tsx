@@ -331,14 +331,22 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
 
           <Heatmap days={days28} />
 
-          <div className="mt-4 flex items-center justify-between text-[12px] text-muted-foreground">
-            <span>Less</span>
-            <div className="flex items-center gap-1">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <span key={i} className="h-3 w-4 rounded-sm" style={{ background: heatColor(i) }} />
-              ))}
+          <div className="mt-4 flex items-center justify-between gap-4 text-[11.5px] text-muted-foreground">
+            <span>Hover a cell for details</span>
+            <div className="flex items-center gap-2">
+              <span>0</span>
+              <div className="flex items-center gap-1">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <span
+                    key={i}
+                    className="h-3 w-4 rounded-sm border border-border/50"
+                    style={{ background: heatColor(i) }}
+                    title={i === 0 ? "No symptoms logged" : `${i}${i === 4 ? "+" : ""} symptom${i === 1 ? "" : "s"}`}
+                  />
+                ))}
+              </div>
+              <span>4+ symptoms</span>
             </div>
-            <span>More</span>
           </div>
         </section>
 
