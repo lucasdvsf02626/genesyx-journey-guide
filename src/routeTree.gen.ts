@@ -9,12 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrustRouteImport } from './routes/trust'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as HealthDisclaimerRouteImport } from './routes/health-disclaimer'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ApproachRouteImport } from './routes/approach'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
@@ -25,6 +27,11 @@ import { Route as AppNutritionRouteImport } from './routes/app.nutrition'
 import { Route as AppLogRouteImport } from './routes/app.log'
 import { Route as AppInsightsRouteImport } from './routes/app.insights'
 
+const TrustRoute = TrustRouteImport.update({
+  id: '/trust',
+  path: '/trust',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -53,6 +60,11 @@ const HealthDisclaimerRoute = HealthDisclaimerRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApproachRoute = ApproachRouteImport.update({
+  id: '/approach',
+  path: '/approach',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -104,12 +116,14 @@ const AppInsightsRoute = AppInsightsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/approach': typeof ApproachRoute
   '/auth': typeof AuthRoute
   '/health-disclaimer': typeof HealthDisclaimerRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/trust': typeof TrustRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/log': typeof AppLogRoute
   '/app/nutrition': typeof AppNutritionRoute
@@ -120,12 +134,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/approach': typeof ApproachRoute
   '/auth': typeof AuthRoute
   '/health-disclaimer': typeof HealthDisclaimerRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/trust': typeof TrustRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/log': typeof AppLogRoute
   '/app/nutrition': typeof AppNutritionRoute
@@ -138,12 +154,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/approach': typeof ApproachRoute
   '/auth': typeof AuthRoute
   '/health-disclaimer': typeof HealthDisclaimerRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/trust': typeof TrustRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/log': typeof AppLogRoute
   '/app/nutrition': typeof AppNutritionRoute
@@ -157,12 +175,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/approach'
     | '/auth'
     | '/health-disclaimer'
     | '/privacy'
     | '/reset-password'
     | '/support'
     | '/terms'
+    | '/trust'
     | '/app/insights'
     | '/app/log'
     | '/app/nutrition'
@@ -173,12 +193,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/approach'
     | '/auth'
     | '/health-disclaimer'
     | '/privacy'
     | '/reset-password'
     | '/support'
     | '/terms'
+    | '/trust'
     | '/app/insights'
     | '/app/log'
     | '/app/nutrition'
@@ -190,12 +212,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/approach'
     | '/auth'
     | '/health-disclaimer'
     | '/privacy'
     | '/reset-password'
     | '/support'
     | '/terms'
+    | '/trust'
     | '/app/insights'
     | '/app/log'
     | '/app/nutrition'
@@ -208,17 +232,26 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  ApproachRoute: typeof ApproachRoute
   AuthRoute: typeof AuthRoute
   HealthDisclaimerRoute: typeof HealthDisclaimerRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
+  TrustRoute: typeof TrustRoute
   InviteCodeRoute: typeof InviteCodeRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trust': {
+      id: '/trust'
+      path: '/trust'
+      fullPath: '/trust'
+      preLoaderRoute: typeof TrustRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -259,6 +292,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/approach': {
+      id: '/approach'
+      path: '/approach'
+      fullPath: '/approach'
+      preLoaderRoute: typeof ApproachRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app': {
@@ -350,12 +390,14 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  ApproachRoute: ApproachRoute,
   AuthRoute: AuthRoute,
   HealthDisclaimerRoute: HealthDisclaimerRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
+  TrustRoute: TrustRoute,
   InviteCodeRoute: InviteCodeRoute,
 }
 export const routeTree = rootRouteImport
