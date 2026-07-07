@@ -57,15 +57,18 @@ function Index() {
     return <DesktopIntro onContinue={() => setFlow("quiz")} onBack={() => setFlow("splash")} />;
   }
 
-  // Quiz / results / waitlist stay inside the mobile phone-frame per product decision.
+  if (flow === "quiz") {
+    return (
+      <QuizFlow
+        onComplete={(a) => { setQuizAnswers(a); setFlow("results"); }}
+        onBack={() => setFlow("intro")}
+      />
+    );
+  }
+
+  // Results / waitlist keep the current framed layout for now.
   return (
     <AppShell>
-      {flow === "quiz" && (
-        <QuizFlow
-          onComplete={(a) => { setQuizAnswers(a); setFlow("results"); }}
-          onBack={() => setFlow("intro")}
-        />
-      )}
       {flow === "results" && (
         <QuizResults
           answers={quizAnswers}
