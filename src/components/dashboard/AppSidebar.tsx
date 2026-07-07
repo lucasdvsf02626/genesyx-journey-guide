@@ -20,6 +20,8 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/use-auth";
+import { BrandLogo } from "@/components/genesyx/BrandLogo";
+
 
 type NavItem = { title: string; url: string; icon: typeof LayoutDashboard; exact?: boolean };
 const nav: NavItem[] = [
