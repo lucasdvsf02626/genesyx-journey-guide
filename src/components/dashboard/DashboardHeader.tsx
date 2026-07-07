@@ -76,7 +76,7 @@ export function DashboardHeader({
             <DropdownMenuItem
               onSelect={async () => {
                 await signOut();
-                navigate({ to: "/" });
+                navigate({ to: "/auth", replace: true });
               }}
             >
               <LogOut className="h-4 w-4" /> Sign out
