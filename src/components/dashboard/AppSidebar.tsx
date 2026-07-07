@@ -45,16 +45,14 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border">
-        <Link to="/app" className="flex items-center gap-2.5 px-1.5 py-1.5">
-          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground text-[13px] font-bold">
-            G
-          </div>
-          <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-            <p className="truncate text-[13.5px] font-semibold leading-tight">Genesyx</p>
-            <p className="truncate text-[11px] text-muted-foreground">Fertility workspace</p>
-          </div>
+        <Link to="/app" className="flex items-center gap-2 px-1 py-1.5">
+          <BrandLogo variant="mark" size={28} className="shrink-0" />
+          <span className="min-w-0 truncate font-display text-[15px] font-bold tracking-tight group-data-[collapsible=icon]:hidden">
+            <BrandLogo variant="wordmark" size={16} />
+          </span>
         </Link>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Workspace</SidebarGroupLabel>
