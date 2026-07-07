@@ -47,12 +47,11 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border">
-        <Link to="/app" className="flex items-center gap-2 px-1 py-1.5">
-          <BrandLogo variant="mark" size={28} className="shrink-0" />
-          <span className="min-w-0 truncate font-display text-[15px] font-bold tracking-tight group-data-[collapsible=icon]:hidden">
-            <BrandLogo variant="wordmark" size={16} />
-          </span>
+        <Link to="/app" className="flex items-center gap-2 px-1 py-1.5" aria-label="Genesyx">
+          <BrandLogo variant="full" size={28} className="group-data-[collapsible=icon]:hidden" />
+          <BrandLogo variant="mark" size={28} className="hidden group-data-[collapsible=icon]:inline-flex" />
         </Link>
+
       </SidebarHeader>
 
       <SidebarContent>
