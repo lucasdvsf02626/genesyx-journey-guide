@@ -213,3 +213,11 @@
   33% { transform: translateY(-12px) translateX(6px); }
   66% { transform: translateY(8px) translateX(-6px); }
 }
+
+/* Dashboard primitives */
+.dash-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+.tabular { font-variant-numeric: tabular-nums; }
