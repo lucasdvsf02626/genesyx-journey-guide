@@ -168,7 +168,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
               Optimal zone shaded. Values below 6.0 read acidic, above 7.5 alkaline.
             </p>
           </div>
-          <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
             <Legend swatch="#3FA37A" label="Optimal 6.0–7.5" />
             <Legend swatch="var(--color-electric-pink, #D85A8A)" label="Acidic <6.0" />
             <Legend swatch="var(--color-electric-lavender, #4D4DAA)" label="Alkaline >7.5" />
@@ -176,7 +176,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
               <button
                 type="button"
                 onClick={onOpenTracker}
-                className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-3 py-1.5 text-[12px] font-medium text-foreground hover:bg-muted"
+                className="ml-1 inline-flex items-center gap-1 rounded-lg border border-border bg-background px-3 py-1.5 text-[12px] font-medium text-foreground hover:bg-muted"
               >
                 Open tracker <ChevronRight className="h-3.5 w-3.5" />
               </button>
