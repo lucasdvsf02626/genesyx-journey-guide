@@ -19,9 +19,11 @@ import {
   YAxis,
   Tooltip,
   ReferenceArea,
+  ReferenceLine,
   CartesianGrid,
   BarChart,
   Bar,
+  type TooltipProps,
 } from "recharts";
 import { useAuth } from "@/hooks/use-auth";
 import { useServerFn } from "@tanstack/react-start";
@@ -168,7 +170,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
               Optimal zone shaded. Values below 6.0 read acidic, above 7.5 alkaline.
             </p>
           </div>
-          <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
             <Legend swatch="#3FA37A" label="Optimal 6.0–7.5" />
             <Legend swatch="var(--color-electric-pink, #D85A8A)" label="Acidic <6.0" />
             <Legend swatch="var(--color-electric-lavender, #4D4DAA)" label="Alkaline >7.5" />
@@ -176,7 +178,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
               <button
                 type="button"
                 onClick={onOpenTracker}
-                className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-3 py-1.5 text-[12px] font-medium text-foreground hover:bg-muted"
+                className="ml-1 inline-flex items-center gap-1 rounded-lg border border-border bg-background px-3 py-1.5 text-[12px] font-medium text-foreground hover:bg-muted"
               >
                 Open tracker <ChevronRight className="h-3.5 w-3.5" />
               </button>
@@ -213,14 +215,8 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
                 />
                 <ReferenceArea y1={6} y2={7.5} fill="#3FA37A" fillOpacity={0.08} />
                 <Tooltip
-                  contentStyle={{
-                    background: "var(--popover)",
-                    border: "1px solid var(--border)",
-                    borderRadius: 12,
-                    fontSize: 12,
-                  }}
-                  labelStyle={{ color: "var(--muted-foreground)" }}
-                  formatter={(v) => (v == null ? "—" : Number(v).toFixed(1))}
+                  cursor={{ stroke: "var(--border)", strokeDasharray: "3 3" }}
+                  content={<PhTooltip />}
                 />
                 <Line
                   type="monotone"
@@ -260,22 +256,26 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
             </div>
             <span className="text-[12px] font-medium text-primary">Target 2.4L / day</span>
           </div>
-          <div className="mt-6 h-[220px] w-full">
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
+            <Legend swatch="var(--color-electric-blue, #57A1CE)" label="Water logged" />
+            <Legend swatch="var(--muted-foreground)" label="2.4L daily target" dashed />
+          </div>
+          <div className="mt-4 h-[220px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={days7.map((d) => ({ label: d.weekday, ml: d.waterMl, pct: d.pct }))}>
+              <BarChart data={days7.map((d) => ({ label: d.weekday, fullDate: d.date, ml: d.waterMl, pct: d.pct }))}>
                 <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="label" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
                 <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} width={36}
                   tickFormatter={(v) => `${(v / 1000).toFixed(1)}L`} />
+                <ReferenceLine
+                  y={WATER_TARGET_ML}
+                  stroke="var(--muted-foreground)"
+                  strokeDasharray="4 4"
+                  label={{ value: "Target", position: "right", fill: "var(--muted-foreground)", fontSize: 10 }}
+                />
                 <Tooltip
                   cursor={{ fill: "var(--muted)", opacity: 0.5 }}
-                  contentStyle={{
-                    background: "var(--popover)",
-                    border: "1px solid var(--border)",
-                    borderRadius: 12,
-                    fontSize: 12,
-                  }}
-                  formatter={(v: number) => [`${(v / 1000).toFixed(2)} L`, "Hydration"]}
+                  content={<HydrationTooltip />}
                 />
                 <Bar dataKey="ml" fill="var(--color-electric-blue, #57A1CE)" radius={[8, 8, 4, 4]} />
               </BarChart>
@@ -331,14 +331,22 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
 
           <Heatmap days={days28} />
 
-          <div className="mt-4 flex items-center justify-between text-[12px] text-muted-foreground">
-            <span>Less</span>
-            <div className="flex items-center gap-1">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <span key={i} className="h-3 w-4 rounded-sm" style={{ background: heatColor(i) }} />
-              ))}
+          <div className="mt-4 flex items-center justify-between gap-4 text-[11.5px] text-muted-foreground">
+            <span>Hover a cell for details</span>
+            <div className="flex items-center gap-2">
+              <span>0</span>
+              <div className="flex items-center gap-1">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <span
+                    key={i}
+                    className="h-3 w-4 rounded-sm border border-border/50"
+                    style={{ background: heatColor(i) }}
+                    title={i === 0 ? "No symptoms logged" : `${i}${i === 4 ? "+" : ""} symptom${i === 1 ? "" : "s"}`}
+                  />
+                ))}
+              </div>
+              <span>4+ symptoms</span>
             </div>
-            <span>More</span>
           </div>
         </section>
 
@@ -573,12 +581,89 @@ function KpiCard({
   );
 }
 
-function Legend({ swatch, label }: { swatch: string; label: string }) {
+function Legend({ swatch, label, dashed }: { swatch: string; label: string; dashed?: boolean }) {
   return (
-    <span className="hidden items-center gap-1.5 md:inline-flex">
-      <span className="h-2.5 w-2.5 rounded-full" style={{ background: swatch }} />
+    <span className="inline-flex items-center gap-1.5">
+      {dashed ? (
+        <span
+          className="inline-block h-0 w-4 border-t-2 border-dashed"
+          style={{ borderColor: swatch }}
+        />
+      ) : (
+        <span className="h-2.5 w-2.5 rounded-full" style={{ background: swatch }} />
+      )}
       {label}
     </span>
+  );
+}
+
+function formatFullDate(iso: string) {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function PhTooltip({ active, payload }: TooltipProps<number, string>) {
+  if (!active || !payload || !payload.length) return null;
+  const p = payload[0].payload as { date: string; value: number | null };
+  const status = p.value != null ? phStatus(p.value) : null;
+  return (
+    <div className="rounded-xl border border-border bg-popover px-3 py-2 text-[12px] shadow-lg">
+      <p className="font-medium text-foreground">{formatFullDate(p.date)}</p>
+      {p.value != null ? (
+        <>
+          <div className="mt-1 flex items-baseline gap-2">
+            <span className="font-display text-[18px] font-semibold text-foreground">
+              {p.value.toFixed(1)}
+            </span>
+            <span className="text-muted-foreground">pH</span>
+          </div>
+          {status && (
+            <div className="mt-1 flex items-center gap-1.5">
+              <span
+                className="h-2 w-2 rounded-full"
+                style={{ background: PH_STATUS_COLOR[status] }}
+              />
+              <span style={{ color: PH_STATUS_COLOR[status] }} className="font-medium">
+                {PH_STATUS_LABEL[status]}
+              </span>
+            </div>
+          )}
+        </>
+      ) : (
+        <p className="mt-1 text-muted-foreground">No reading logged</p>
+      )}
+    </div>
+  );
+}
+
+function HydrationTooltip({ active, payload }: TooltipProps<number, string>) {
+  if (!active || !payload || !payload.length) return null;
+  const p = payload[0].payload as { fullDate: string; ml: number; pct: number };
+  const delta = p.ml - WATER_TARGET_ML;
+  return (
+    <div className="rounded-xl border border-border bg-popover px-3 py-2 text-[12px] shadow-lg">
+      <p className="font-medium text-foreground">{formatFullDate(p.fullDate)}</p>
+      <div className="mt-1 flex items-baseline gap-2">
+        <span className="font-display text-[18px] font-semibold text-foreground">
+          {(p.ml / 1000).toFixed(2)}L
+        </span>
+        <span className="text-muted-foreground">/ 2.4L</span>
+      </div>
+      <div className="mt-1 flex items-center gap-2">
+        <span className="rounded-md bg-[var(--color-electric-blue,#57A1CE)]/15 px-1.5 py-0.5 font-medium text-[var(--color-electric-blue,#57A1CE)]">
+          {p.pct}% of target
+        </span>
+        {p.ml > 0 && (
+          <span className="text-muted-foreground">
+            {delta >= 0 ? `+${(delta / 1000).toFixed(2)}L over` : `${(delta / 1000).toFixed(2)}L to go`}
+          </span>
+        )}
+      </div>
+    </div>
   );
 }
 
