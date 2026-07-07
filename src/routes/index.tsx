@@ -108,8 +108,8 @@ function DesktopSplash({ onStart, onSignIn }: { onStart: () => void; onSignIn: (
         <BrandLogo size={34} />
         <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
           <a href="#pillars" className="hover:text-foreground">Product</a>
-          <a href="#about" className="hover:text-foreground">Approach</a>
-          <a href="#trust" className="hover:text-foreground">Trust</a>
+          <Link to="/approach" className="hover:text-foreground">Approach</Link>
+          <Link to="/trust" className="hover:text-foreground">Trust</Link>
         </nav>
         <div className="flex items-center gap-2">
           <button
