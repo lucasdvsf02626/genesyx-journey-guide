@@ -19,9 +19,11 @@ import {
   YAxis,
   Tooltip,
   ReferenceArea,
+  ReferenceLine,
   CartesianGrid,
   BarChart,
   Bar,
+  type TooltipProps,
 } from "recharts";
 import { useAuth } from "@/hooks/use-auth";
 import { useServerFn } from "@tanstack/react-start";
