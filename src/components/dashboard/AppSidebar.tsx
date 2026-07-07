@@ -21,14 +21,16 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/use-auth";
 
-const nav = [
+type NavItem = { title: string; url: string; icon: typeof LayoutDashboard; exact?: boolean };
+const nav: NavItem[] = [
   { title: "Overview", url: "/app", icon: LayoutDashboard, exact: true },
   { title: "Cycle", url: "/app/track", icon: CalendarDays },
   { title: "Nutrition", url: "/app/nutrition", icon: Apple },
   { title: "Insights", url: "/app/insights", icon: LineChart },
   { title: "Daily log", url: "/app/log", icon: PenSquare },
   { title: "Profile", url: "/app/profile", icon: UserRound },
-] as const;
+];
+
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
