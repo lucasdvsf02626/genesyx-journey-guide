@@ -213,14 +213,8 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
                 />
                 <ReferenceArea y1={6} y2={7.5} fill="#3FA37A" fillOpacity={0.08} />
                 <Tooltip
-                  contentStyle={{
-                    background: "var(--popover)",
-                    border: "1px solid var(--border)",
-                    borderRadius: 12,
-                    fontSize: 12,
-                  }}
-                  labelStyle={{ color: "var(--muted-foreground)" }}
-                  formatter={(v) => (v == null ? "—" : Number(v).toFixed(1))}
+                  cursor={{ stroke: "var(--border)", strokeDasharray: "3 3" }}
+                  content={<PhTooltip />}
                 />
                 <Line
                   type="monotone"
