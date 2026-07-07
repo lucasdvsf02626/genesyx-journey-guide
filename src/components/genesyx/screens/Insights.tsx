@@ -220,7 +220,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
                     fontSize: 12,
                   }}
                   labelStyle={{ color: "var(--muted-foreground)" }}
-                  formatter={(v: number | null) => (v == null ? "—" : v.toFixed(1))}
+                  formatter={(v) => (v == null ? "—" : Number(v).toFixed(1))}
                 />
                 <Line
                   type="monotone"
