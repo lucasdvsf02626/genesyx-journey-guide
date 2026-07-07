@@ -1,10 +1,38 @@
 import { useEffect, useMemo, useState } from "react";
-import { ScreenHeader } from "../ScreenHeader";
-import { Sparkles, Droplets } from "lucide-react";
-import { PhInsightsSection } from "../PhInsightsSection";
+import {
+  Sparkles,
+  Droplets,
+  Activity,
+  CalendarCheck,
+  TrendingUp,
+  TrendingDown,
+  ArrowRight,
+  ChevronRight,
+  Flame,
+  HeartPulse,
+} from "lucide-react";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ReferenceArea,
+  CartesianGrid,
+  BarChart,
+  Bar,
+} from "recharts";
 import { useAuth } from "@/hooks/use-auth";
 import { useServerFn } from "@tanstack/react-start";
 import { listDailyLogs, type DailyLogRowDTO } from "@/lib/daily-log.functions";
+import {
+  usePhReadings,
+  phStatus,
+  PH_STATUS_LABEL,
+  PH_STATUS_COLOR,
+  type PhStatus,
+} from "@/hooks/use-ph";
 
 const WATER_TARGET_ML = 2400;
 
@@ -13,6 +41,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
   const listFn = useServerFn(listDailyLogs);
   const [logs, setLogs] = useState<DailyLogRowDTO[]>([]);
   const [loading, setLoading] = useState(true);
+  const { readings, loading: phLoading } = usePhReadings(30);
 
   useEffect(() => {
     let cancelled = false;
@@ -25,30 +54,12 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
     return () => { cancelled = true; };
   }, [user, listFn]);
 
-  const last7 = useMemo(() => {
-    const out: { date: string; weekday: string; pct: number; ml: number }[] = [];
-    const today = new Date();
-    const byDate = new Map(logs.map((l) => [l.date, l]));
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
-      const iso = d.toISOString().slice(0, 10);
-      const ml = byDate.get(iso)?.waterMl ?? 0;
-      out.push({
-        date: iso,
-        weekday: ["S","M","T","W","T","F","S"][d.getDay()],
-        pct: Math.min(100, Math.round((ml / WATER_TARGET_ML) * 100)),
-        ml,
-      });
-    }
-    return out;
-  }, [logs]);
-
+  const days28 = useMemo(() => buildDayGrid(28, logs), [logs]);
+  const days7 = useMemo(() => days28.slice(-7), [days28]);
+  const phSeries = useMemo(() => buildPhSeries(30, readings), [readings]);
   const symptomCounts = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const l of logs) {
-      for (const s of l.symptoms) counts.set(s, (counts.get(s) ?? 0) + 1);
-    }
+    for (const l of logs) for (const s of l.symptoms) counts.set(s, (counts.get(s) ?? 0) + 1);
     return [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6);
   }, [logs]);
 
@@ -56,110 +67,528 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
   const avgWater = loggedDays > 0
     ? Math.round(logs.reduce((a, l) => a + l.waterMl, 0) / loggedDays)
     : 0;
+  const consistencyPct = Math.round((loggedDays / 30) * 100);
+
+  const latestPh = phSeries.filter((d) => d.value != null).slice(-1)[0]?.value ?? null;
+  const prevPh = phSeries.filter((d) => d.value != null).slice(-2, -1)[0]?.value ?? null;
+  const avgPh = (() => {
+    const vals = phSeries.filter((d) => d.value != null).map((d) => d.value as number);
+    if (!vals.length) return null;
+    return vals.reduce((a, b) => a + b, 0) / vals.length;
+  })();
+  const phTrend: "up" | "down" | "flat" | null =
+    latestPh != null && prevPh != null
+      ? latestPh - prevPh > 0.1 ? "up" : latestPh - prevPh < -0.1 ? "down" : "flat"
+      : null;
+  const currentStatus: PhStatus | null = latestPh != null ? phStatus(latestPh) : null;
 
   if (!user) {
     return (
-      <div className="gx-screen pb-4">
-        <ScreenHeader title="Your Insights" large />
-        <div className="px-6 mt-12 text-center">
-          <Sparkles className="mx-auto h-10 w-10 text-primary/60" />
-          <p className="mt-4 font-display text-[18px] font-semibold">Sign in to see your insights</p>
-          <p className="mt-1 text-[13.5px] text-muted-foreground">
-            Your patterns appear here once you start logging.
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="max-w-md text-center">
+          <Sparkles className="mx-auto h-10 w-10 text-primary/70" />
+          <p className="mt-4 font-display text-[20px] font-semibold">Sign in to see your insights</p>
+          <p className="mt-2 text-[14px] text-muted-foreground">
+            Your patterns will appear here once you start logging.
           </p>
         </div>
       </div>
     );
   }
 
-  if (loading) {
+  if (loading || phLoading) {
     return (
-      <div className="gx-screen pb-4">
-        <ScreenHeader title="Your Insights" large />
-        <div className="px-5 space-y-4">
-          <div className="h-40 animate-pulse rounded-3xl bg-muted/50" />
-          <div className="h-40 animate-pulse rounded-3xl bg-muted/50" />
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {[0, 1, 2].map((i) => <div key={i} className="h-24 animate-pulse rounded-2xl bg-muted/60" />)}
+        </div>
+        <div className="h-72 animate-pulse rounded-3xl bg-muted/60" />
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="h-64 animate-pulse rounded-3xl bg-muted/60" />
+          <div className="h-64 animate-pulse rounded-3xl bg-muted/60" />
         </div>
       </div>
     );
   }
 
-  const empty = loggedDays === 0;
+  const empty = loggedDays === 0 && readings.length === 0;
 
   return (
-    <div className="gx-screen pb-4">
-      <ScreenHeader
-        title="Your Insights"
-        subtitle={empty
-          ? "Log a few days and your patterns will start to appear here."
-          : "Patterns from the last 30 days of your real data."}
-        large
-      />
+    <div className="space-y-6">
+      {/* Hero header */}
+      <div className="flex flex-col gap-2">
+        <p className="font-display text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
+          Your Insights
+        </p>
+        <h2 className="font-display text-[28px] font-semibold leading-tight tracking-tight md:text-[34px]">
+          Patterns from the last 30 days
+        </h2>
+        <p className="max-w-[62ch] text-[14.5px] leading-relaxed text-muted-foreground">
+          {empty
+            ? "Log a few days and your patterns will start to appear here."
+            : "Understanding your rhythm helps you make informed, gentle decisions for your wellbeing."}
+        </p>
+      </div>
 
-      <div className="px-5 space-y-4">
-        <PhInsightsSection onOpenTracker={onOpenTracker} />
+      {/* KPI row */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <KpiCard
+          Icon={HeartPulse}
+          label="Latest pH"
+          value={latestPh != null ? latestPh.toFixed(1) : "—"}
+          hint={currentStatus ? PH_STATUS_LABEL[currentStatus] : "No readings yet"}
+          hintColor={currentStatus ? PH_STATUS_COLOR[currentStatus] : undefined}
+          trend={phTrend}
+        />
+        <KpiCard
+          Icon={Droplets}
+          label="Avg hydration"
+          value={avgWater > 0 ? `${(avgWater / 1000).toFixed(1)}L` : "—"}
+          hint={avgWater > 0 ? `${Math.round((avgWater / WATER_TARGET_ML) * 100)}% of daily target` : "Log to start"}
+        />
+        <KpiCard
+          Icon={CalendarCheck}
+          label="Logging consistency"
+          value={`${loggedDays}/30`}
+          hint={`${consistencyPct}% of the last 30 days`}
+        />
+      </div>
 
-        {/* Hydration - last 7 days from real logs */}
-        <div className="rounded-3xl bg-card gx-soft-shadow p-5 gx-card-shadow">
-          <div className="flex items-baseline justify-between">
-            <p className="font-display text-[16px] font-semibold tracking-tight">Hydration</p>
-            <span className="text-[12px] font-medium text-primary">Last 7 days</span>
+      {/* pH trend */}
+      <section className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              pH trend
+            </p>
+            <h3 className="mt-1 font-display text-[20px] font-semibold">
+              Urine pH — last 30 days
+            </h3>
+            <p className="mt-1 text-[13px] text-muted-foreground">
+              Optimal zone shaded. Values below 6.0 read acidic, above 7.5 alkaline.
+            </p>
           </div>
-          <div className="mt-5 flex items-end gap-2 h-32">
-            {last7.map((d, i) => (
-              <div key={i} className="flex-1 flex h-full flex-col items-center justify-end gap-1.5">
-                <div
-                  className="w-full rounded-t-lg bg-linear-to-t from-[var(--color-electric-blue)] to-[var(--color-powder-blue)]"
-                  style={{ height: `${Math.max(d.pct, 4)}%`, opacity: d.ml === 0 ? 0.25 : 1 }}
-                  title={`${d.date}: ${(d.ml / 1000).toFixed(1)}L`}
+          <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
+            <Legend swatch="#3FA37A" label="Optimal 6.0–7.5" />
+            <Legend swatch="var(--color-electric-pink, #D85A8A)" label="Acidic <6.0" />
+            <Legend swatch="var(--color-electric-lavender, #4D4DAA)" label="Alkaline >7.5" />
+            {onOpenTracker && (
+              <button
+                type="button"
+                onClick={onOpenTracker}
+                className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-3 py-1.5 text-[12px] font-medium text-foreground hover:bg-muted"
+              >
+                Open tracker <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-5 h-[280px] w-full">
+          {readings.length === 0 ? (
+            <EmptyChart
+              label="No pH readings yet"
+              hint="Log your first reading on the Track page to start seeing your trend."
+            />
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={phSeries} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
+                <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
+                <XAxis
+                  dataKey="label"
+                  stroke="var(--muted-foreground)"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
+                  interval={4}
                 />
-                <span className="text-[10px] text-muted-foreground">{d.weekday}</span>
-              </div>
-            ))}
+                <YAxis
+                  domain={[4.5, 8.5]}
+                  ticks={[5, 6, 7, 8]}
+                  stroke="var(--muted-foreground)"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
+                  width={28}
+                />
+                <ReferenceArea y1={6} y2={7.5} fill="#3FA37A" fillOpacity={0.08} />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--popover)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 12,
+                    fontSize: 12,
+                  }}
+                  labelStyle={{ color: "var(--muted-foreground)" }}
+                  formatter={(v) => (v == null ? "—" : Number(v).toFixed(1))}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="var(--primary)"
+                  strokeWidth={2.5}
+                  dot={{ r: 3, fill: "var(--primary)" }}
+                  activeDot={{ r: 5 }}
+                  connectNulls
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+
+        {avgPh != null && (
+          <p className="mt-4 flex items-center gap-2 text-[13px] text-foreground/80">
+            <Activity className="h-4 w-4 text-primary" />
+            30-day average <strong className="mx-1">{avgPh.toFixed(1)}</strong> ·{" "}
+            <span style={{ color: PH_STATUS_COLOR[phStatus(avgPh)] }}>
+              {PH_STATUS_LABEL[phStatus(avgPh)]}
+            </span>
+          </p>
+        )}
+      </section>
+
+      {/* Two-column: hydration + consistency ring */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+        {/* Hydration bars */}
+        <section className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+          <div className="flex items-baseline justify-between">
+            <div>
+              <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Hydration
+              </p>
+              <h3 className="mt-1 font-display text-[20px] font-semibold">Last 7 days</h3>
+            </div>
+            <span className="text-[12px] font-medium text-primary">Target 2.4L / day</span>
           </div>
-          <p className="mt-4 flex items-center gap-2 text-[13px] leading-relaxed text-foreground/80">
-            <Droplets className="h-4 w-4 text-[var(--color-electric-blue)]" />
+          <div className="mt-6 h-[220px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={days7.map((d) => ({ label: d.weekday, ml: d.waterMl, pct: d.pct }))}>
+                <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="label" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} width={36}
+                  tickFormatter={(v) => `${(v / 1000).toFixed(1)}L`} />
+                <Tooltip
+                  cursor={{ fill: "var(--muted)", opacity: 0.5 }}
+                  contentStyle={{
+                    background: "var(--popover)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 12,
+                    fontSize: 12,
+                  }}
+                  formatter={(v: number) => [`${(v / 1000).toFixed(2)} L`, "Hydration"]}
+                />
+                <Bar dataKey="ml" fill="var(--color-electric-blue, #57A1CE)" radius={[8, 8, 4, 4]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="mt-4 flex items-center gap-2 text-[13px] text-foreground/80">
+            <Droplets className="h-4 w-4 text-[var(--color-electric-blue,#57A1CE)]" />
             {avgWater > 0
               ? `${(avgWater / 1000).toFixed(1)}L average across ${loggedDays} day${loggedDays === 1 ? "" : "s"} logged.`
               : "No hydration logged yet — tap Log today on Home to start."}
           </p>
-        </div>
+        </section>
 
-        {/* Symptom frequency */}
-        <div className="rounded-3xl bg-card gx-soft-shadow p-5 gx-card-shadow">
-          <p className="font-display text-[16px] font-semibold tracking-tight">Top symptoms</p>
+        {/* Consistency ring */}
+        <section className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+          <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            Consistency
+          </p>
+          <h3 className="mt-1 font-display text-[20px] font-semibold">Logging streak</h3>
+
+          <div className="mt-6 flex items-center gap-6">
+            <Ring pct={consistencyPct} />
+            <div className="min-w-0">
+              <p className="font-display text-[32px] font-semibold leading-none">
+                {loggedDays}
+                <span className="ml-1 text-[15px] font-medium text-muted-foreground">/ 30 days</span>
+              </p>
+              <p className="mt-2 flex items-center gap-1.5 text-[13px] text-muted-foreground">
+                <Flame className="h-3.5 w-3.5 text-primary" />
+                {consistencyPct >= 70
+                  ? "Beautifully steady rhythm."
+                  : consistencyPct >= 30
+                    ? "You're building a rhythm — keep going."
+                    : "A few more logs will unlock richer insights."}
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* Two-column: symptom heatmap + top symptoms */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)]">
+        <section className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+          <div className="flex items-baseline justify-between">
+            <div>
+              <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Symptom activity
+              </p>
+              <h3 className="mt-1 font-display text-[20px] font-semibold">Last 4 weeks</h3>
+            </div>
+            <span className="text-[12px] text-muted-foreground">Each cell = 1 day</span>
+          </div>
+
+          <Heatmap days={days28} />
+
+          <div className="mt-4 flex items-center justify-between text-[12px] text-muted-foreground">
+            <span>Less</span>
+            <div className="flex items-center gap-1">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <span key={i} className="h-3 w-4 rounded-sm" style={{ background: heatColor(i) }} />
+              ))}
+            </div>
+            <span>More</span>
+          </div>
+        </section>
+
+        <section className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+          <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            Top symptoms
+          </p>
+          <h3 className="mt-1 font-display text-[20px] font-semibold">Most logged this month</h3>
+
           {symptomCounts.length === 0 ? (
-            <p className="mt-3 text-[13px] text-muted-foreground">
-              No symptoms logged in the last 30 days.
-            </p>
+            <div className="mt-8 flex flex-col items-center justify-center rounded-2xl border border-dashed border-border p-8 text-center">
+              <Sparkles className="h-8 w-8 text-primary/60" />
+              <p className="mt-3 text-[14px] font-medium">No symptoms logged yet</p>
+              <p className="mt-1 text-[13px] text-muted-foreground">
+                Start with Daily log and patterns appear here in a few days.
+              </p>
+            </div>
           ) : (
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-5 space-y-3">
               {symptomCounts.map(([name, count]) => {
                 const max = symptomCounts[0][1];
                 const pct = Math.round((count / max) * 100);
                 return (
                   <li key={name}>
-                    <div className="flex items-center justify-between text-[13px]">
-                      <span className="font-medium text-foreground">{name}</span>
-                      <span className="text-muted-foreground">{count} day{count === 1 ? "" : "s"}</span>
+                    <div className="flex items-center justify-between text-[13.5px]">
+                      <span className="font-medium capitalize text-foreground">{name}</span>
+                      <span className="text-muted-foreground">
+                        {count} day{count === 1 ? "" : "s"}
+                      </span>
                     </div>
-                    <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-muted">
-                      <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+                    <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-primary/70 to-primary"
+                        style={{ width: `${pct}%` }}
+                      />
                     </div>
                   </li>
                 );
               })}
             </ul>
           )}
-        </div>
+        </section>
+      </div>
 
-        {/* Logging consistency */}
-        <div className="rounded-3xl bg-card gx-soft-shadow p-5 gx-card-shadow">
-          <p className="font-display text-[16px] font-semibold tracking-tight">Logging consistency</p>
-          <p className="mt-2 text-[13px] leading-relaxed text-foreground/80">
-            You've logged <strong>{loggedDays}</strong> day{loggedDays === 1 ? "" : "s"} out of the last 30. Steady, gentle tracking gives the clearest picture.
-          </p>
+      {/* Footer strip */}
+      <section className="rounded-3xl border border-border bg-gradient-to-br from-primary/8 via-card to-card p-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="font-display text-[16px] font-semibold">Keep the rhythm going</p>
+            <p className="mt-1 text-[13.5px] text-muted-foreground">
+              A 30-second log today keeps your insights sharp.
+            </p>
+          </div>
+          {onOpenTracker && (
+            <button
+              type="button"
+              onClick={onOpenTracker}
+              className="inline-flex h-11 items-center gap-1 rounded-xl bg-primary px-5 text-[14px] font-semibold text-primary-foreground hover:bg-primary/90"
+            >
+              Log a pH reading <ArrowRight className="h-4 w-4" />
+            </button>
+          )}
         </div>
+      </section>
+    </div>
+  );
+}
+
+/* ---------- helpers ---------- */
+
+type Day = {
+  date: string;
+  weekday: string;
+  waterMl: number;
+  pct: number;
+  symptomCount: number;
+  logged: boolean;
+};
+
+function buildDayGrid(n: number, logs: DailyLogRowDTO[]): Day[] {
+  const byDate = new Map(logs.map((l) => [l.date, l]));
+  const out: Day[] = [];
+  const today = new Date();
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const iso = d.toISOString().slice(0, 10);
+    const row = byDate.get(iso);
+    const ml = row?.waterMl ?? 0;
+    out.push({
+      date: iso,
+      weekday: ["S", "M", "T", "W", "T", "F", "S"][d.getDay()],
+      waterMl: ml,
+      pct: Math.min(100, Math.round((ml / WATER_TARGET_ML) * 100)),
+      symptomCount: row?.symptoms?.length ?? 0,
+      logged: !!row,
+    });
+  }
+  return out;
+}
+
+function buildPhSeries(n: number, readings: { phValue: number; recordedAt: string }[]) {
+  const byDate = new Map<string, number[]>();
+  for (const r of readings) {
+    const key = r.recordedAt.slice(0, 10);
+    (byDate.get(key) ?? byDate.set(key, []).get(key)!).push(r.phValue);
+  }
+  const out: { date: string; label: string; value: number | null }[] = [];
+  const today = new Date();
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const iso = d.toISOString().slice(0, 10);
+    const arr = byDate.get(iso);
+    const value = arr && arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
+    out.push({
+      date: iso,
+      label: `${d.getMonth() + 1}/${d.getDate()}`,
+      value: value != null ? Math.round(value * 10) / 10 : null,
+    });
+  }
+  return out;
+}
+
+function heatColor(level: 0 | 1 | 2 | 3 | 4 | number) {
+  const alphas = [0.06, 0.2, 0.4, 0.65, 0.9];
+  const a = alphas[Math.min(4, Math.max(0, Math.floor(level)))];
+  return `color-mix(in oklab, var(--primary) ${a * 100}%, transparent)`;
+}
+
+function Heatmap({ days }: { days: Day[] }) {
+  // 4 weeks x 7 days = 28 cells
+  const weeks: Day[][] = [];
+  for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
+  return (
+    <div className="mt-5">
+      <div className="grid grid-cols-7 gap-1.5 text-center text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+        {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
+          <span key={i}>{d}</span>
+        ))}
+      </div>
+      <div className="mt-2 space-y-1.5">
+        {weeks.map((week, wi) => (
+          <div key={wi} className="grid grid-cols-7 gap-1.5">
+            {week.map((day) => {
+              const level = day.logged
+                ? Math.min(4, day.symptomCount)
+                : 0;
+              return (
+                <div
+                  key={day.date}
+                  title={`${day.date} · ${day.symptomCount} symptom${day.symptomCount === 1 ? "" : "s"}${day.logged ? "" : " · not logged"}`}
+                  className="aspect-square rounded-md border border-border/50"
+                  style={{
+                    background: day.logged ? heatColor(level) : "transparent",
+                  }}
+                />
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Ring({ pct }: { pct: number }) {
+  const size = 120;
+  const stroke = 12;
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const offset = c * (1 - Math.min(100, Math.max(0, pct)) / 100);
+  return (
+    <div className="relative shrink-0" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle cx={size / 2} cy={size / 2} r={r} stroke="var(--muted)" strokeWidth={stroke} fill="none" />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          stroke="var(--primary)"
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={offset}
+          fill="none"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="font-display text-[22px] font-semibold">{pct}%</span>
+      </div>
+    </div>
+  );
+}
+
+function KpiCard({
+  Icon,
+  label,
+  value,
+  hint,
+  hintColor,
+  trend,
+}: {
+  Icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+  hint?: string;
+  hintColor?: string;
+  trend?: "up" | "down" | "flat" | null;
+}) {
+  const TrendIcon = trend === "up" ? TrendingUp : trend === "down" ? TrendingDown : null;
+  return (
+    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          {label}
+        </span>
+        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <Icon className="h-4 w-4" />
+        </span>
+      </div>
+      <div className="mt-3 flex items-baseline gap-2">
+        <span className="font-display text-[28px] font-semibold leading-none">{value}</span>
+        {TrendIcon && <TrendIcon className="h-4 w-4 text-primary" />}
+      </div>
+      {hint && (
+        <p className="mt-2 text-[12.5px]" style={{ color: hintColor ?? "var(--muted-foreground)" }}>
+          {hint}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function Legend({ swatch, label }: { swatch: string; label: string }) {
+  return (
+    <span className="hidden items-center gap-1.5 md:inline-flex">
+      <span className="h-2.5 w-2.5 rounded-full" style={{ background: swatch }} />
+      {label}
+    </span>
+  );
+}
+
+function EmptyChart({ label, hint }: { label: string; hint: string }) {
+  return (
+    <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-border bg-background/50">
+      <div className="max-w-sm px-6 text-center">
+        <Activity className="mx-auto h-8 w-8 text-primary/60" />
+        <p className="mt-3 font-display text-[15px] font-semibold">{label}</p>
+        <p className="mt-1 text-[13px] text-muted-foreground">{hint}</p>
       </div>
     </div>
   );
