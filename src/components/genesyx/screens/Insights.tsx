@@ -85,14 +85,119 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
   const currentStatus: PhStatus | null = latestPh != null ? phStatus(latestPh) : null;
 
   if (!user) {
+    const demoPh = Array.from({ length: 30 }, (_, i) => ({
+      day: i,
+      label: `D${i + 1}`,
+      value: +(6.3 + Math.sin(i / 3) * 0.5 + (i % 7 === 0 ? 0.3 : 0)).toFixed(2),
+    }));
+    const demoHydration = [1.6, 2.1, 1.9, 2.4, 2.2, 2.5, 2.0].map((l, i) => ({
+      label: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][i],
+      litres: l,
+      pct: Math.round((l * 1000 / WATER_TARGET_ML) * 100),
+    }));
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="max-w-md text-center">
-          <Sparkles className="mx-auto h-10 w-10 text-primary/70" />
-          <p className="mt-4 font-display text-[20px] font-semibold">Sign in to see your insights</p>
-          <p className="mt-2 text-[14px] text-muted-foreground">
-            Your patterns will appear here once you start logging.
-          </p>
+      <div className="space-y-6">
+        {/* Preview banner */}
+        <div className="relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background p-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-primary/15 text-primary">
+                <Sparkles className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="font-display text-[22px] font-semibold leading-tight">Your insights are waiting</p>
+                <p className="mt-1 text-[14px] text-muted-foreground max-w-xl">
+                  Sign in to unlock personalized pH trends, hydration tracking, symptom heatmaps and consistency streaks — built from your daily logs.
+                </p>
+              </div>
+            </div>
+            <a
+              href="/auth"
+              className="inline-flex items-center gap-2 self-start rounded-xl bg-primary px-4 py-2.5 text-[14px] font-medium text-primary-foreground shadow-sm transition hover:opacity-90 md:self-auto"
+            >
+              Sign in to view <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+
+        {/* Preview KPI cards */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {[
+            { icon: HeartPulse, label: "Latest pH", value: "6.8", meta: "Optimal range", tone: "text-emerald-500" },
+            { icon: Droplets, label: "Avg hydration", value: "2.1 L", meta: "88% of daily target", tone: "text-sky-500" },
+            { icon: CalendarCheck, label: "Consistency", value: "24 / 30", meta: "80% logged", tone: "text-primary" },
+          ].map((k) => (
+            <div key={k.label} className="rounded-3xl border bg-card p-5">
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] uppercase tracking-wide text-muted-foreground">{k.label}</span>
+                <k.icon className={`h-4 w-4 ${k.tone}`} />
+              </div>
+              <p className="mt-3 font-display text-[28px] font-semibold">{k.value}</p>
+              <p className="mt-1 text-[12px] text-muted-foreground">{k.meta}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Preview charts */}
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <div className="rounded-3xl border bg-card p-5 lg:col-span-2">
+            <div className="mb-3 flex items-center justify-between">
+              <div>
+                <p className="font-display text-[16px] font-semibold">pH trend · sample</p>
+                <p className="text-[12px] text-muted-foreground">30-day preview with optimal zone (6.0–7.5)</p>
+              </div>
+              <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] text-muted-foreground">Demo data</span>
+            </div>
+            <div className="h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={demoPh} margin={{ top: 8, right: 12, left: -8, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                  <XAxis dataKey="label" tick={{ fontSize: 11 }} interval={4} axisLine={false} tickLine={false} />
+                  <YAxis domain={[5.5, 8]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <ReferenceArea y1={6.0} y2={7.5} fill="hsl(var(--primary))" fillOpacity={0.08} />
+                  <ReferenceLine y={7} stroke="hsl(var(--muted-foreground))" strokeDasharray="2 2" />
+                  <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2.5} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border bg-card p-5">
+            <div className="mb-3">
+              <p className="font-display text-[16px] font-semibold">Hydration · sample</p>
+              <p className="text-[12px] text-muted-foreground">Last 7 days vs 2.4 L target</p>
+            </div>
+            <div className="h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={demoHydration} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                  <XAxis dataKey="label" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <ReferenceLine y={2.4} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
+                  <Bar dataKey="litres" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        {/* What you'll get */}
+        <div className="rounded-3xl border bg-card p-6">
+          <p className="font-display text-[16px] font-semibold">What you'll unlock</p>
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: Activity, title: "pH patterns", body: "See when your body drifts outside the optimal window." },
+              { icon: Droplets, title: "Hydration streaks", body: "Track daily water intake against your target." },
+              { icon: Flame, title: "Symptom heatmap", body: "Spot recurring symptoms across the last 28 days." },
+              { icon: TrendingUp, title: "Consistency score", body: "Build a habit — the more you log, the sharper the insights." },
+            ].map((f) => (
+              <div key={f.title} className="rounded-2xl border bg-background/50 p-4">
+                <f.icon className="h-5 w-5 text-primary" />
+                <p className="mt-3 text-[14px] font-semibold">{f.title}</p>
+                <p className="mt-1 text-[12px] text-muted-foreground">{f.body}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
