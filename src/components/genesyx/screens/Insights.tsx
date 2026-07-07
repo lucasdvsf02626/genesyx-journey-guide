@@ -254,22 +254,26 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
             </div>
             <span className="text-[12px] font-medium text-primary">Target 2.4L / day</span>
           </div>
-          <div className="mt-6 h-[220px] w-full">
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
+            <Legend swatch="var(--color-electric-blue, #57A1CE)" label="Water logged" />
+            <Legend swatch="var(--muted-foreground)" label="2.4L daily target" dashed />
+          </div>
+          <div className="mt-4 h-[220px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={days7.map((d) => ({ label: d.weekday, ml: d.waterMl, pct: d.pct }))}>
+              <BarChart data={days7.map((d) => ({ label: d.weekday, fullDate: d.date, ml: d.waterMl, pct: d.pct }))}>
                 <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="label" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
                 <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} width={36}
                   tickFormatter={(v) => `${(v / 1000).toFixed(1)}L`} />
+                <ReferenceLine
+                  y={WATER_TARGET_ML}
+                  stroke="var(--muted-foreground)"
+                  strokeDasharray="4 4"
+                  label={{ value: "Target", position: "right", fill: "var(--muted-foreground)", fontSize: 10 }}
+                />
                 <Tooltip
                   cursor={{ fill: "var(--muted)", opacity: 0.5 }}
-                  contentStyle={{
-                    background: "var(--popover)",
-                    border: "1px solid var(--border)",
-                    borderRadius: 12,
-                    fontSize: 12,
-                  }}
-                  formatter={(v: number) => [`${(v / 1000).toFixed(2)} L`, "Hydration"]}
+                  content={<HydrationTooltip />}
                 />
                 <Bar dataKey="ml" fill="var(--color-electric-blue, #57A1CE)" radius={[8, 8, 4, 4]} />
               </BarChart>
