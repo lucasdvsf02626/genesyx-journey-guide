@@ -23,7 +23,7 @@ function PrivacyPage() {
         <h2>Data we collect</h2>
         <ul>
           <li>Account info: email address, display name, optional profile photo.</li>
-          <li>Wellness data you enter: cycle settings, daily logs (mood, energy, symptoms, sleep, hydration, supplements, notes), urine pH readings, and partner connection info.</li>
+          <li>Wellness data you enter: cycle settings, daily logs (mood, energy, symptoms, sleep, hydration, supplements, notes), vaginal pH readings, and partner connection info.</li>
           <li>Basic device and session info needed to keep you signed in.</li>
         </ul>
         <h2>How we use it</h2>

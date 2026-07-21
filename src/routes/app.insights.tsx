@@ -6,7 +6,7 @@ export const Route = createFileRoute("/app/insights")({
   head: () => ({
     meta: [
       { title: "Insights · Genesyx" },
-      { name: "description", content: "Trends across hydration, symptoms, and pH." },
+      { name: "description", content: "Trends across hydration, symptoms, and vaginal pH." },
       { name: "robots", content: "noindex" },
     ],
   }),

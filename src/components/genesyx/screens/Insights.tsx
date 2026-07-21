@@ -107,7 +107,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
               <div>
                 <p className="font-display text-[22px] font-semibold leading-tight">Your insights are waiting</p>
                 <p className="mt-1 text-[14px] text-muted-foreground max-w-xl">
-                  Sign in to unlock personalized pH trends, hydration tracking, symptom heatmaps and consistency streaks — built from your daily logs.
+                  Sign in to unlock personalized vaginal pH trends, hydration tracking, symptom heatmaps and consistency streaks — built from your daily logs.
                 </p>
               </div>
             </div>
@@ -123,7 +123,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
         {/* Preview KPI cards */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {[
-            { icon: HeartPulse, label: "Latest pH", value: "6.8", meta: "Optimal range", tone: "text-emerald-500" },
+            { icon: HeartPulse, label: "Latest vaginal pH", value: "6.8", meta: "Optimal range", tone: "text-emerald-500" },
             { icon: Droplets, label: "Avg hydration", value: "2.1 L", meta: "88% of daily target", tone: "text-sky-500" },
             { icon: CalendarCheck, label: "Consistency", value: "24 / 30", meta: "80% logged", tone: "text-primary" },
           ].map((k) => (
@@ -143,7 +143,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
           <div className="rounded-3xl border bg-card p-5 lg:col-span-2">
             <div className="mb-3 flex items-center justify-between">
               <div>
-                <p className="font-display text-[16px] font-semibold">pH trend · sample</p>
+                <p className="font-display text-[16px] font-semibold">Vaginal pH trend · sample</p>
                 <p className="text-[12px] text-muted-foreground">30-day preview with optimal zone (6.0–7.5)</p>
               </div>
               <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] text-muted-foreground">Demo data</span>
@@ -186,7 +186,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
           <p className="font-display text-[16px] font-semibold">What you'll unlock</p>
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: Activity, title: "pH patterns", body: "See when your body drifts outside the optimal window." },
+              { icon: Activity, title: "Vaginal pH patterns", body: "See when your body drifts outside the optimal window." },
               { icon: Droplets, title: "Hydration streaks", body: "Track daily water intake against your target." },
               { icon: Flame, title: "Symptom heatmap", body: "Spot recurring symptoms across the last 28 days." },
               { icon: TrendingUp, title: "Consistency score", body: "Build a habit — the more you log, the sharper the insights." },
@@ -241,7 +241,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <KpiCard
           Icon={HeartPulse}
-          label="Latest pH"
+          label="Latest vaginal pH"
           value={latestPh != null ? latestPh.toFixed(1) : "—"}
           hint={currentStatus ? PH_STATUS_LABEL[currentStatus] : "No readings yet"}
           hintColor={currentStatus ? PH_STATUS_COLOR[currentStatus] : undefined}
@@ -266,10 +266,10 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              pH trend
+              Vaginal pH trend
             </p>
             <h3 className="mt-1 font-display text-[20px] font-semibold">
-              Urine pH — last 30 days
+              Vaginal pH — last 30 days
             </h3>
             <p className="mt-1 text-[13px] text-muted-foreground">
               Optimal zone shaded. Values below 6.0 read acidic, above 7.5 alkaline.
@@ -294,7 +294,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
         <div className="mt-5 h-[280px] w-full">
           {readings.length === 0 ? (
             <EmptyChart
-              label="No pH readings yet"
+              label="No vaginal pH readings yet"
               hint="Log your first reading on the Track page to start seeing your trend."
             />
           ) : (
@@ -511,7 +511,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
               onClick={onOpenTracker}
               className="inline-flex h-11 items-center gap-1 rounded-xl bg-primary px-5 text-[14px] font-semibold text-primary-foreground hover:bg-primary/90"
             >
-              Log a pH reading <ArrowRight className="h-4 w-4" />
+              Log a vaginal pH reading <ArrowRight className="h-4 w-4" />
             </button>
           )}
         </div>

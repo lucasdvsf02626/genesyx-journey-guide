@@ -25,7 +25,7 @@ export const Route = createFileRoute("/app/")({
   head: () => ({
     meta: [
       { title: "Overview · Genesyx" },
-      { name: "description", content: "Your cycle, hydration, streak, and pH at a glance." },
+      { name: "description", content: "Your cycle, hydration, streak, and vaginal pH at a glance." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -102,7 +102,7 @@ function Overview() {
               icon={Flame}
             />
             <KpiCard
-              label="Last pH"
+              label="Last vaginal pH"
               value={lastPh ? lastPh.phValue.toFixed(1) : "—"}
               unit={lastPh ? "pH" : undefined}
               hint={
@@ -167,7 +167,7 @@ function Overview() {
 
           {/* Bottom row */}
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
-            <Panel className="xl:col-span-2" title="pH tracker" description="Cervical mucus pH history" bodyClassName="p-4">
+            <Panel className="xl:col-span-2" title="Vaginal pH tracker" description="Vaginal pH history" bodyClassName="p-4">
               <PhTrackerCard onRequireAuth={() => navigate({ to: "/auth" })} />
             </Panel>
             <Panel title="Quick actions">

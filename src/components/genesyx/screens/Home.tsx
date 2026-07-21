@@ -156,7 +156,7 @@ export function HomeScreen({
         >
           <span>
             <span className="block text-[14px] font-semibold">Sign in to save your journey</span>
-            <span className="block text-[12px] opacity-85">Cycle setup, logs, pH readings, and profile sync.</span>
+            <span className="block text-[12px] opacity-85">Cycle setup, logs, vaginal pH readings, and profile sync.</span>
           </span>
           <LogIn className="h-5 w-5 shrink-0" />
         </button>
