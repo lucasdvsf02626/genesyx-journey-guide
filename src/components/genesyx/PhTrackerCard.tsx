@@ -49,7 +49,7 @@ export function PhTrackerCard({ onRequireAuth }: { onRequireAuth?: () => void })
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-primary">Track your pH</p>
-          <p className="mt-1 font-display text-[18px] font-semibold tracking-tight">Urine Tracker</p>
+          <p className="mt-1 font-display text-[18px] font-semibold tracking-tight">Vaginal pH</p>
         </div>
         <Button onClick={openNew} size="sm" className="h-9 rounded-full bg-primary px-4 text-[13px] font-semibold text-primary-foreground hover:bg-primary/90">
           <Plus className="mr-1 h-4 w-4" /> Log pH
