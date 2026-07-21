@@ -6,7 +6,7 @@ export const Route = createFileRoute("/app/track")({
   head: () => ({
     meta: [
       { title: "Cycle · Genesyx" },
-      { name: "description", content: "Track your cycle, phases, and pH." },
+      { name: "description", content: "Track your cycle, phases, and vaginal pH." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -17,7 +17,7 @@ function TrackPage() {
   const navigate = useNavigate();
   return (
     <div className="flex min-h-svh flex-col">
-      <DashboardHeader title="Cycle" subtitle="Calendar, phases, and pH tracking" />
+      <DashboardHeader title="Cycle" subtitle="Calendar, phases, and vaginal pH tracking" />
       <main className="flex-1 px-4 py-5 lg:px-6">
         <div className="mx-auto w-full max-w-[1100px]">
           <TrackScreen

@@ -53,7 +53,7 @@ export function PhInsightsSection({ onOpenTracker }: { onOpenTracker?: () => voi
       className="block w-full text-left rounded-3xl bg-card gx-soft-shadow p-5 gx-card-shadow transition-colors hover:border-primary/40"
     >
       <div className="flex items-center justify-between">
-        <p className="font-display text-[16px] font-semibold tracking-tight">Urine pH</p>
+        <p className="font-display text-[16px] font-semibold tracking-tight">Vaginal pH</p>
         <span className="inline-flex items-center gap-1 text-[12px] font-medium text-primary">
           Open tracker <ChevronRight className="h-3.5 w-3.5" />
         </span>

@@ -157,7 +157,7 @@ function ApproachPage() {
             <ul className="mt-5 space-y-2 text-[14px] text-muted-foreground">
               <li className="flex gap-2">
                 <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                Cervical mucus pH ranges based on published fertility windows.
+                Vaginal pH ranges based on published fertility windows.
               </li>
               <li className="flex gap-2">
                 <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />

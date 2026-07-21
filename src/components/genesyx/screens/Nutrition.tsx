@@ -269,7 +269,7 @@ export function NutritionScreen({ onRequireAuth }: { onRequireAuth?: () => void 
             <DialogDescription>{articleOpen?.read}</DialogDescription>
           </DialogHeader>
           <p className="text-[13.5px] leading-relaxed text-muted-foreground">
-            Keep the focus simple: regular meals, steady hydration, and phase-aware foods. Use your logs and pH tracker to notice patterns over time rather than chasing perfection.
+            Keep the focus simple: regular meals, steady hydration, and phase-aware foods. Use your logs and vaginal pH tracker to notice patterns over time rather than chasing perfection.
           </p>
           <DialogFooter>
             <Button onClick={() => setArticleOpen(null)} className="rounded-xl">Done</Button>
