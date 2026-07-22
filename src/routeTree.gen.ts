@@ -29,6 +29,7 @@ import { Route as AppLearnRouteImport } from './routes/app.learn'
 import { Route as AppInsightsRouteImport } from './routes/app.insights'
 import { Route as AppHistoryRouteImport } from './routes/app.history'
 import { Route as AppTrackIndexRouteImport } from './routes/app.track.index'
+import { Route as AppProfileIndexRouteImport } from './routes/app.profile.index'
 import { Route as AppLearnIndexRouteImport } from './routes/app.learn.index'
 import { Route as AppTrackSymptomsRouteImport } from './routes/app.track.symptoms'
 import { Route as AppTrackSleepRouteImport } from './routes/app.track.sleep'
@@ -36,6 +37,7 @@ import { Route as AppTrackPhRouteImport } from './routes/app.track.ph'
 import { Route as AppTrackNutritionRouteImport } from './routes/app.track.nutrition'
 import { Route as AppTrackHydrationRouteImport } from './routes/app.track.hydration'
 import { Route as AppTrackCycleRouteImport } from './routes/app.track.cycle'
+import { Route as AppProfileRemindersRouteImport } from './routes/app.profile.reminders'
 import { Route as AppLearnSearchRouteImport } from './routes/app.learn.search'
 import { Route as AppLearnSlugRouteImport } from './routes/app.learn.$slug'
 
@@ -139,6 +141,11 @@ const AppTrackIndexRoute = AppTrackIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppTrackRoute,
 } as any)
+const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppProfileRoute,
+} as any)
 const AppLearnIndexRoute = AppLearnIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -174,6 +181,11 @@ const AppTrackCycleRoute = AppTrackCycleRouteImport.update({
   path: '/cycle',
   getParentRoute: () => AppTrackRoute,
 } as any)
+const AppProfileRemindersRoute = AppProfileRemindersRouteImport.update({
+  id: '/reminders',
+  path: '/reminders',
+  getParentRoute: () => AppProfileRoute,
+} as any)
 const AppLearnSearchRoute = AppLearnSearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -201,12 +213,13 @@ export interface FileRoutesByFullPath {
   '/app/learn': typeof AppLearnRouteWithChildren
   '/app/log': typeof AppLogRoute
   '/app/nutrition': typeof AppNutritionRoute
-  '/app/profile': typeof AppProfileRoute
+  '/app/profile': typeof AppProfileRouteWithChildren
   '/app/track': typeof AppTrackRouteWithChildren
   '/invite/$code': typeof InviteCodeRoute
   '/app/': typeof AppIndexRoute
   '/app/learn/$slug': typeof AppLearnSlugRoute
   '/app/learn/search': typeof AppLearnSearchRoute
+  '/app/profile/reminders': typeof AppProfileRemindersRoute
   '/app/track/cycle': typeof AppTrackCycleRoute
   '/app/track/hydration': typeof AppTrackHydrationRoute
   '/app/track/nutrition': typeof AppTrackNutritionRoute
@@ -214,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/app/track/sleep': typeof AppTrackSleepRoute
   '/app/track/symptoms': typeof AppTrackSymptomsRoute
   '/app/learn/': typeof AppLearnIndexRoute
+  '/app/profile/': typeof AppProfileIndexRoute
   '/app/track/': typeof AppTrackIndexRoute
 }
 export interface FileRoutesByTo {
@@ -230,11 +244,11 @@ export interface FileRoutesByTo {
   '/app/insights': typeof AppInsightsRoute
   '/app/log': typeof AppLogRoute
   '/app/nutrition': typeof AppNutritionRoute
-  '/app/profile': typeof AppProfileRoute
   '/invite/$code': typeof InviteCodeRoute
   '/app': typeof AppIndexRoute
   '/app/learn/$slug': typeof AppLearnSlugRoute
   '/app/learn/search': typeof AppLearnSearchRoute
+  '/app/profile/reminders': typeof AppProfileRemindersRoute
   '/app/track/cycle': typeof AppTrackCycleRoute
   '/app/track/hydration': typeof AppTrackHydrationRoute
   '/app/track/nutrition': typeof AppTrackNutritionRoute
@@ -242,6 +256,7 @@ export interface FileRoutesByTo {
   '/app/track/sleep': typeof AppTrackSleepRoute
   '/app/track/symptoms': typeof AppTrackSymptomsRoute
   '/app/learn': typeof AppLearnIndexRoute
+  '/app/profile': typeof AppProfileIndexRoute
   '/app/track': typeof AppTrackIndexRoute
 }
 export interface FileRoutesById {
@@ -261,12 +276,13 @@ export interface FileRoutesById {
   '/app/learn': typeof AppLearnRouteWithChildren
   '/app/log': typeof AppLogRoute
   '/app/nutrition': typeof AppNutritionRoute
-  '/app/profile': typeof AppProfileRoute
+  '/app/profile': typeof AppProfileRouteWithChildren
   '/app/track': typeof AppTrackRouteWithChildren
   '/invite/$code': typeof InviteCodeRoute
   '/app/': typeof AppIndexRoute
   '/app/learn/$slug': typeof AppLearnSlugRoute
   '/app/learn/search': typeof AppLearnSearchRoute
+  '/app/profile/reminders': typeof AppProfileRemindersRoute
   '/app/track/cycle': typeof AppTrackCycleRoute
   '/app/track/hydration': typeof AppTrackHydrationRoute
   '/app/track/nutrition': typeof AppTrackNutritionRoute
@@ -274,6 +290,7 @@ export interface FileRoutesById {
   '/app/track/sleep': typeof AppTrackSleepRoute
   '/app/track/symptoms': typeof AppTrackSymptomsRoute
   '/app/learn/': typeof AppLearnIndexRoute
+  '/app/profile/': typeof AppProfileIndexRoute
   '/app/track/': typeof AppTrackIndexRoute
 }
 export interface FileRouteTypes {
@@ -300,6 +317,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/app/learn/$slug'
     | '/app/learn/search'
+    | '/app/profile/reminders'
     | '/app/track/cycle'
     | '/app/track/hydration'
     | '/app/track/nutrition'
@@ -307,6 +325,7 @@ export interface FileRouteTypes {
     | '/app/track/sleep'
     | '/app/track/symptoms'
     | '/app/learn/'
+    | '/app/profile/'
     | '/app/track/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -323,11 +342,11 @@ export interface FileRouteTypes {
     | '/app/insights'
     | '/app/log'
     | '/app/nutrition'
-    | '/app/profile'
     | '/invite/$code'
     | '/app'
     | '/app/learn/$slug'
     | '/app/learn/search'
+    | '/app/profile/reminders'
     | '/app/track/cycle'
     | '/app/track/hydration'
     | '/app/track/nutrition'
@@ -335,6 +354,7 @@ export interface FileRouteTypes {
     | '/app/track/sleep'
     | '/app/track/symptoms'
     | '/app/learn'
+    | '/app/profile'
     | '/app/track'
   id:
     | '__root__'
@@ -359,6 +379,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/app/learn/$slug'
     | '/app/learn/search'
+    | '/app/profile/reminders'
     | '/app/track/cycle'
     | '/app/track/hydration'
     | '/app/track/nutrition'
@@ -366,6 +387,7 @@ export interface FileRouteTypes {
     | '/app/track/sleep'
     | '/app/track/symptoms'
     | '/app/learn/'
+    | '/app/profile/'
     | '/app/track/'
   fileRoutesById: FileRoutesById
 }
@@ -525,6 +547,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTrackIndexRouteImport
       parentRoute: typeof AppTrackRoute
     }
+    '/app/profile/': {
+      id: '/app/profile/'
+      path: '/'
+      fullPath: '/app/profile/'
+      preLoaderRoute: typeof AppProfileIndexRouteImport
+      parentRoute: typeof AppProfileRoute
+    }
     '/app/learn/': {
       id: '/app/learn/'
       path: '/'
@@ -574,6 +603,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTrackCycleRouteImport
       parentRoute: typeof AppTrackRoute
     }
+    '/app/profile/reminders': {
+      id: '/app/profile/reminders'
+      path: '/reminders'
+      fullPath: '/app/profile/reminders'
+      preLoaderRoute: typeof AppProfileRemindersRouteImport
+      parentRoute: typeof AppProfileRoute
+    }
     '/app/learn/search': {
       id: '/app/learn/search'
       path: '/search'
@@ -607,6 +643,20 @@ const AppLearnRouteWithChildren = AppLearnRoute._addFileChildren(
   AppLearnRouteChildren,
 )
 
+interface AppProfileRouteChildren {
+  AppProfileRemindersRoute: typeof AppProfileRemindersRoute
+  AppProfileIndexRoute: typeof AppProfileIndexRoute
+}
+
+const AppProfileRouteChildren: AppProfileRouteChildren = {
+  AppProfileRemindersRoute: AppProfileRemindersRoute,
+  AppProfileIndexRoute: AppProfileIndexRoute,
+}
+
+const AppProfileRouteWithChildren = AppProfileRoute._addFileChildren(
+  AppProfileRouteChildren,
+)
+
 interface AppTrackRouteChildren {
   AppTrackCycleRoute: typeof AppTrackCycleRoute
   AppTrackHydrationRoute: typeof AppTrackHydrationRoute
@@ -637,7 +687,7 @@ interface AppRouteChildren {
   AppLearnRoute: typeof AppLearnRouteWithChildren
   AppLogRoute: typeof AppLogRoute
   AppNutritionRoute: typeof AppNutritionRoute
-  AppProfileRoute: typeof AppProfileRoute
+  AppProfileRoute: typeof AppProfileRouteWithChildren
   AppTrackRoute: typeof AppTrackRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
 }
@@ -648,7 +698,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLearnRoute: AppLearnRouteWithChildren,
   AppLogRoute: AppLogRoute,
   AppNutritionRoute: AppNutritionRoute,
-  AppProfileRoute: AppProfileRoute,
+  AppProfileRoute: AppProfileRouteWithChildren,
   AppTrackRoute: AppTrackRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
 }

@@ -7,6 +7,8 @@ import {
   UserRound,
   PenSquare,
   BookOpen,
+  History,
+  Bell,
 } from "lucide-react";
 import {
   Sidebar,
@@ -27,12 +29,14 @@ import { BrandLogo } from "@/components/genesyx/BrandLogo";
 type NavItem = { title: string; url: string; icon: typeof LayoutDashboard; exact?: boolean };
 const nav: NavItem[] = [
   { title: "Overview", url: "/app", icon: LayoutDashboard, exact: true },
-  { title: "Cycle", url: "/app/track", icon: CalendarDays },
+  { title: "Cycle & trackers", url: "/app/track", icon: CalendarDays },
   { title: "Nutrition", url: "/app/nutrition", icon: Apple },
   { title: "Insights", url: "/app/insights", icon: LineChart },
   { title: "Learn", url: "/app/learn", icon: BookOpen },
+  { title: "Log history", url: "/app/history", icon: History },
   { title: "Daily log", url: "/app/log", icon: PenSquare },
-  { title: "Profile", url: "/app/profile", icon: UserRound },
+  { title: "Reminders", url: "/app/profile/reminders", icon: Bell },
+  { title: "Profile", url: "/app/profile", icon: UserRound, exact: true },
 ];
 
 
