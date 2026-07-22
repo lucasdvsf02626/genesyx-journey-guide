@@ -37,6 +37,7 @@ export function HomeScreen({
   const { log } = useDailyLog();
   const { streak } = useStreak();
   const [cycleOpen, setCycleOpen] = useState(false);
+  const WATER_TARGET_ML = useHydrationGoal();
 
   const displayName =
     (user?.user_metadata?.full_name as string | undefined) ??
