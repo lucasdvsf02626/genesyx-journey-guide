@@ -11,6 +11,7 @@ import {
   CATEGORY_ORDER,
   CATEGORY_GRADIENT,
   getArticleBySlug,
+  getHeroImageUrl,
   type LearnCategory,
 } from "@/lib/learn";
 
