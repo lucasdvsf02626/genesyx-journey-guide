@@ -10,7 +10,10 @@ import { useServerFn } from "@tanstack/react-start";
 import { acceptPartnerInvite } from "@/lib/partner.functions";
 
 export const Route = createFileRoute("/invite/$code")({
-  head: () => ({ meta: [{ title: "Partner invite — Genesyx" }] }),
+  head: () => ({ meta: [{ title: "Partner invite — Genesyx" }, { name: "robots", content: "noindex" }] }),
+  beforeLoad: () => {
+    throw redirect({ to: "/app" });
+  },
   component: InvitePage,
 });
 

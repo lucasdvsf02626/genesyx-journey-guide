@@ -126,7 +126,7 @@ export function ProfileScreen({ onSignIn }: { onPregnancy?: () => void; onSignIn
           </div>
         </div>
 
-        <PartnerSection />
+        {/* PartnerSection hidden — MVP backend is a stub. */}
 
         <div>
           <p className="mb-2 px-1 text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">Account</p>
