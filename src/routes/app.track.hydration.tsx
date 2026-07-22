@@ -8,7 +8,8 @@ import { Droplets, Plus, Minus, Flame } from "lucide-react";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, ReferenceLine, CartesianGrid, Tooltip } from "recharts";
 import { useAuth } from "@/hooks/use-auth";
 import { useDailyLog } from "@/hooks/use-daily-log";
-import { useHydrationGoal } from "@/hooks/use-hydration-goal";
+import { useHydrationGoal, useSetHydrationGoal } from "@/hooks/use-hydration-goal";
+import { MIN_HYDRATION_GOAL_ML, MAX_HYDRATION_GOAL_ML } from "@/lib/hydration.functions";
 import { useTrackingSummary } from "@/hooks/use-tracking-summary";
 import { toast } from "sonner";
 
