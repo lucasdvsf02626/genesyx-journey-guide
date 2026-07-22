@@ -3,8 +3,8 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export const DEFAULT_HYDRATION_GOAL_ML = 2400;
-export const MIN_HYDRATION_GOAL_ML = 500;
-export const MAX_HYDRATION_GOAL_ML = 6000;
+export const MIN_HYDRATION_GOAL_ML = 1000;
+export const MAX_HYDRATION_GOAL_ML = 5000;
 
 export const getHydrationGoal = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
