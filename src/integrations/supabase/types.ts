@@ -237,7 +237,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_partner_id: { Args: { _user_id: string }; Returns: string }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
