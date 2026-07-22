@@ -31,12 +31,15 @@ function HydrationDetail() {
   const navigate = useNavigate();
   const { log, save } = useDailyLog();
   const goalMl = useHydrationGoal();
+  const setGoal = useSetHydrationGoal();
+  const [goalInput, setGoalInput] = useState("");
   const { summary, logs, loading } = useTrackingSummary(30);
   const [waterMl, setWaterMl] = useState(0);
   const [manual, setManual] = useState("");
   const debounce = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => { if (log) setWaterMl(log.waterMl); }, [log]);
+  useEffect(() => { setGoalInput(String(goalMl)); }, [goalMl]);
 
   const queueSave = (next: number) => {
     if (debounce.current) clearTimeout(debounce.current);
