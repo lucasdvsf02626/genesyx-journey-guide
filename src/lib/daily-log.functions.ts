@@ -144,3 +144,45 @@ export const listDailyLogs = createServerFn({ method: "GET" })
       waterMl: r.water_ml ?? 0,
     }));
   });
+
+export type DailyLogFullDTO = {
+  date: string;
+  mood: string | null;
+  energy: string | null;
+  symptoms: string[];
+  sleepMinutes: number | null;
+  waterMl: number;
+  supplements: string[];
+  notes: string | null;
+};
+
+export const listDailyLogsFull = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { sinceDays: number }) =>
+    z.object({ sinceDays: z.number().int().min(1).max(730) }).parse(input),
+  )
+  .handler(async ({ data, context }): Promise<DailyLogFullDTO[]> => {
+    const { supabase, userId } = context;
+    const since = new Date();
+    since.setDate(since.getDate() - data.sinceDays);
+    const sinceIso = since.toISOString().slice(0, 10);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: rows, error } = await (supabase as any)
+      .from("daily_logs")
+      .select("date, mood, energy, symptoms, sleep_minutes, water_ml, supplements, notes")
+      .eq("user_id", userId)
+      .gte("date", sinceIso)
+      .order("date", { ascending: false });
+    if (error) safeThrow("listFull", error, "Could not load logs.");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (rows ?? []).map((r: any) => ({
+      date: r.date,
+      mood: r.mood,
+      energy: r.energy,
+      symptoms: r.symptoms ?? [],
+      sleepMinutes: r.sleep_minutes,
+      waterMl: r.water_ml ?? 0,
+      supplements: r.supplements ?? [],
+      notes: r.notes,
+    }));
+  });
