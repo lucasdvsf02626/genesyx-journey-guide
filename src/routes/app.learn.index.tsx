@@ -151,7 +151,7 @@ function LearnLanding() {
                       {getHeroImageUrl(a.heroImage) && (
                         <img
                           src={getHeroImageUrl(a.heroImage)}
-                          alt={featured.title}
+                          alt={a.title}
                           loading="lazy"
                           decoding="async"
                           className="absolute inset-0 h-full w-full object-cover"
