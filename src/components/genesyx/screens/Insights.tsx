@@ -791,3 +791,94 @@ function SupplementAndWeeklySummary() {
     </div>
   );
 }
+
+function SupplementAdherenceCard() {
+  const { logs, loading } = useTrackingSummaryFromEngine();
+  const rows = (() => {
+    const counts = new Map<string, number>();
+    for (const l of logs) for (const s of l.supplements) counts.set(s, (counts.get(s) ?? 0) + 1);
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  })();
+  const daysWith = logs.filter(l => l.supplements.length > 0).length;
+
+  return (
+    <section className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+      <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+        Supplement adherence
+      </p>
+      <h3 className="mt-1 font-display text-[20px] font-semibold">
+        {daysWith} day{daysWith === 1 ? "" : "s"} in the last 30
+      </h3>
+      {loading ? (
+        <p className="mt-3 text-[13px] text-muted-foreground">Loading…</p>
+      ) : rows.length === 0 ? (
+        <p className="mt-3 text-[13px] text-muted-foreground">
+          Tick supplements in Daily log to see adherence here.
+        </p>
+      ) : (
+        <ul className="mt-4 space-y-3">
+          {rows.slice(0, 6).map(([name, count]) => {
+            const pct = Math.round((count / 30) * 100);
+            return (
+              <li key={name}>
+                <div className="flex items-center justify-between text-[13.5px]">
+                  <span className="font-medium">{name}</span>
+                  <span className="tabular-nums text-muted-foreground">{count}/30 · {pct}%</span>
+                </div>
+                <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function WeeklySummaryCard() {
+  const { summary, logs, loading } = useTrackingSummaryFromEngine();
+  const weekComplete = summary.daysLoggedThisWeek >= 4;
+  return (
+    <section className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+      <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+        Weekly summary
+      </p>
+      <h3 className="mt-1 font-display text-[20px] font-semibold">
+        This week · ISO Mon–Sun
+      </h3>
+      {loading ? (
+        <p className="mt-3 text-[13px] text-muted-foreground">Loading…</p>
+      ) : (
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <MiniStat label="Days logged" value={`${summary.daysLoggedThisWeek}/7`} />
+          <MiniStat label="Days on hydration goal" value={`${summary.daysOnGoal}/7`} />
+          <MiniStat label="Weekly streak" value={`${summary.weeklyStreak}w`} />
+          <MiniStat label="Daily activity streak" value={`${summary.dailyActivity}d`} />
+        </div>
+      )}
+      <p className="mt-4 text-[12px] text-muted-foreground">
+        A week is complete once you've logged at least 4 of 7 days.
+        {weekComplete ? " This week clears the threshold." : " Log a few more days to complete this week."}
+      </p>
+      {logs.length === 0 && (
+        <p className="mt-2 text-[12px] text-muted-foreground">Nothing logged yet — start with a mood or a glass of water.</p>
+      )}
+    </section>
+  );
+}
+
+function MiniStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-background p-3">
+      <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className="mt-1 font-display text-[18px] font-semibold tabular-nums">{value}</p>
+    </div>
+  );
+}
+
+// Local helper so this file stays self-contained.
+function useTrackingSummaryFromEngine() {
+  return _useTrackingSummary(30);
+}
