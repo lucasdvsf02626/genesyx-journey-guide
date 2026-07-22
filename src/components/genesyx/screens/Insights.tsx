@@ -782,3 +782,12 @@ function EmptyChart({ label, hint }: { label: string; hint: string }) {
     </div>
   );
 }
+
+function SupplementAndWeeklySummary() {
+  return (
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <SupplementAdherenceCard />
+      <WeeklySummaryCard />
+    </div>
+  );
+}
