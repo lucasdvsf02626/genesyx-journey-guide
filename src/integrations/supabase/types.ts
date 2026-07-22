@@ -160,6 +160,7 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           display_name: string | null
+          hydration_goal_ml: number
           id: string
           partner_id: string | null
           theme: string
@@ -169,6 +170,7 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          hydration_goal_ml?: number
           id: string
           partner_id?: string | null
           theme?: string
@@ -178,6 +180,7 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          hydration_goal_ml?: number
           id?: string
           partner_id?: string | null
           theme?: string

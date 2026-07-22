@@ -18,8 +18,7 @@ import {
 } from "@/lib/cycleEngine";
 import { CycleSettingsDialog } from "@/components/genesyx/CycleSettingsDialog";
 import { PhTrackerCard } from "@/components/genesyx/PhTrackerCard";
-
-const WATER_TARGET_ML = 2400;
+import { useHydrationGoal } from "@/hooks/use-hydration-goal";
 
 export const Route = createFileRoute("/app/")({
   head: () => ({
@@ -40,6 +39,7 @@ function Overview() {
   const { readings } = usePhReadings();
   const [cycleOpen, setCycleOpen] = useState(false);
   const navigate = useNavigate();
+  const WATER_TARGET_ML = useHydrationGoal();
 
   const displayName =
     (user?.user_metadata?.full_name as string | undefined) ??

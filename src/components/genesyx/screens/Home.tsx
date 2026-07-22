@@ -21,8 +21,7 @@ import {
 } from "@/lib/cycleEngine";
 import { CycleSettingsDialog } from "../CycleSettingsDialog";
 import homeBg from "@/assets/genesyx-home-bg-v2.jpg.asset.json";
-
-const WATER_TARGET_ML = 2400;
+import { useHydrationGoal } from "@/hooks/use-hydration-goal";
 
 export function HomeScreen({
   onLog, onProfile, onRequireAuth, quizAnswers,
@@ -38,6 +37,7 @@ export function HomeScreen({
   const { log } = useDailyLog();
   const { streak } = useStreak();
   const [cycleOpen, setCycleOpen] = useState(false);
+  const WATER_TARGET_ML = useHydrationGoal();
 
   const displayName =
     (user?.user_metadata?.full_name as string | undefined) ??

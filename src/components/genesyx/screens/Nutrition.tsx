@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { PhTrackerCard } from "../PhTrackerCard";
 import { showSignInRequired } from "@/lib/authPrompt";
+import { useHydrationGoal } from "@/hooks/use-hydration-goal";
 
-const WATER_TARGET = 2400;
 const WATER_STEP = 200;
 
 type FoodItem = {
@@ -68,6 +68,7 @@ export function NutritionScreen({ onRequireAuth }: { onRequireAuth?: () => void 
   const [articleOpen, setArticleOpen] = useState<(typeof articles)[number] | null>(null);
 
   const [waterMl, setWaterMl] = useState<number>(0);
+  const WATER_TARGET = useHydrationGoal();
   useEffect(() => { if (log) setWaterMl(log.waterMl); }, [log]);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
