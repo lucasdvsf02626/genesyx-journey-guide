@@ -196,6 +196,42 @@ export type Database = {
           },
         ]
       }
+      reminder_preferences: {
+        Row: {
+          consented_at: string | null
+          created_at: string
+          daily_log_enabled: boolean
+          quiet_end: string
+          quiet_start: string
+          timezone: string
+          updated_at: string
+          user_id: string
+          weekly_digest_enabled: boolean
+        }
+        Insert: {
+          consented_at?: string | null
+          created_at?: string
+          daily_log_enabled?: boolean
+          quiet_end?: string
+          quiet_start?: string
+          timezone?: string
+          updated_at?: string
+          user_id: string
+          weekly_digest_enabled?: boolean
+        }
+        Update: {
+          consented_at?: string | null
+          created_at?: string
+          daily_log_enabled?: boolean
+          quiet_end?: string
+          quiet_start?: string
+          timezone?: string
+          updated_at?: string
+          user_id?: string
+          weekly_digest_enabled?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
