@@ -15,7 +15,7 @@ function applyTheme(theme: Theme) {
 
 export function useTheme() {
   const { user } = useAuth();
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
   const fetchPrefs = useServerFn(getProfilePrefs);
   const saveTheme = useServerFn(updateTheme);
 
@@ -23,7 +23,7 @@ export function useTheme() {
   useEffect(() => {
     const saved = (typeof window !== "undefined"
       ? (localStorage.getItem(STORAGE_KEY) as Theme | null)
-      : null) ?? "dark";
+      : null) ?? "light";
     setTheme(saved);
     applyTheme(saved);
   }, []);
