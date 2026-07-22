@@ -68,6 +68,7 @@ export function NutritionScreen({ onRequireAuth }: { onRequireAuth?: () => void 
   const [articleOpen, setArticleOpen] = useState<(typeof articles)[number] | null>(null);
 
   const [waterMl, setWaterMl] = useState<number>(0);
+  const WATER_TARGET = useHydrationGoal();
   useEffect(() => { if (log) setWaterMl(log.waterMl); }, [log]);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
