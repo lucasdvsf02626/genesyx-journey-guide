@@ -25,7 +25,11 @@ import { Route as AppTrackRouteImport } from './routes/app.track'
 import { Route as AppProfileRouteImport } from './routes/app.profile'
 import { Route as AppNutritionRouteImport } from './routes/app.nutrition'
 import { Route as AppLogRouteImport } from './routes/app.log'
+import { Route as AppLearnRouteImport } from './routes/app.learn'
 import { Route as AppInsightsRouteImport } from './routes/app.insights'
+import { Route as AppLearnIndexRouteImport } from './routes/app.learn.index'
+import { Route as AppLearnSearchRouteImport } from './routes/app.learn.search'
+import { Route as AppLearnSlugRouteImport } from './routes/app.learn.$slug'
 
 const TrustRoute = TrustRouteImport.update({
   id: '/trust',
@@ -107,10 +111,30 @@ const AppLogRoute = AppLogRouteImport.update({
   path: '/log',
   getParentRoute: () => AppRoute,
 } as any)
+const AppLearnRoute = AppLearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppInsightsRoute = AppInsightsRouteImport.update({
   id: '/insights',
   path: '/insights',
   getParentRoute: () => AppRoute,
+} as any)
+const AppLearnIndexRoute = AppLearnIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppLearnRoute,
+} as any)
+const AppLearnSearchRoute = AppLearnSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => AppLearnRoute,
+} as any)
+const AppLearnSlugRoute = AppLearnSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => AppLearnRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -125,12 +149,16 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
   '/app/insights': typeof AppInsightsRoute
+  '/app/learn': typeof AppLearnRouteWithChildren
   '/app/log': typeof AppLogRoute
   '/app/nutrition': typeof AppNutritionRoute
   '/app/profile': typeof AppProfileRoute
   '/app/track': typeof AppTrackRoute
   '/invite/$code': typeof InviteCodeRoute
   '/app/': typeof AppIndexRoute
+  '/app/learn/$slug': typeof AppLearnSlugRoute
+  '/app/learn/search': typeof AppLearnSearchRoute
+  '/app/learn/': typeof AppLearnIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -149,6 +177,9 @@ export interface FileRoutesByTo {
   '/app/track': typeof AppTrackRoute
   '/invite/$code': typeof InviteCodeRoute
   '/app': typeof AppIndexRoute
+  '/app/learn/$slug': typeof AppLearnSlugRoute
+  '/app/learn/search': typeof AppLearnSearchRoute
+  '/app/learn': typeof AppLearnIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -163,12 +194,16 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
   '/app/insights': typeof AppInsightsRoute
+  '/app/learn': typeof AppLearnRouteWithChildren
   '/app/log': typeof AppLogRoute
   '/app/nutrition': typeof AppNutritionRoute
   '/app/profile': typeof AppProfileRoute
   '/app/track': typeof AppTrackRoute
   '/invite/$code': typeof InviteCodeRoute
   '/app/': typeof AppIndexRoute
+  '/app/learn/$slug': typeof AppLearnSlugRoute
+  '/app/learn/search': typeof AppLearnSearchRoute
+  '/app/learn/': typeof AppLearnIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -184,12 +219,16 @@ export interface FileRouteTypes {
     | '/terms'
     | '/trust'
     | '/app/insights'
+    | '/app/learn'
     | '/app/log'
     | '/app/nutrition'
     | '/app/profile'
     | '/app/track'
     | '/invite/$code'
     | '/app/'
+    | '/app/learn/$slug'
+    | '/app/learn/search'
+    | '/app/learn/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -208,6 +247,9 @@ export interface FileRouteTypes {
     | '/app/track'
     | '/invite/$code'
     | '/app'
+    | '/app/learn/$slug'
+    | '/app/learn/search'
+    | '/app/learn'
   id:
     | '__root__'
     | '/'
@@ -221,12 +263,16 @@ export interface FileRouteTypes {
     | '/terms'
     | '/trust'
     | '/app/insights'
+    | '/app/learn'
     | '/app/log'
     | '/app/nutrition'
     | '/app/profile'
     | '/app/track'
     | '/invite/$code'
     | '/app/'
+    | '/app/learn/$slug'
+    | '/app/learn/search'
+    | '/app/learn/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -357,6 +403,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLogRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/learn': {
+      id: '/app/learn'
+      path: '/learn'
+      fullPath: '/app/learn'
+      preLoaderRoute: typeof AppLearnRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/insights': {
       id: '/app/insights'
       path: '/insights'
@@ -364,11 +417,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInsightsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/learn/': {
+      id: '/app/learn/'
+      path: '/'
+      fullPath: '/app/learn/'
+      preLoaderRoute: typeof AppLearnIndexRouteImport
+      parentRoute: typeof AppLearnRoute
+    }
+    '/app/learn/search': {
+      id: '/app/learn/search'
+      path: '/search'
+      fullPath: '/app/learn/search'
+      preLoaderRoute: typeof AppLearnSearchRouteImport
+      parentRoute: typeof AppLearnRoute
+    }
+    '/app/learn/$slug': {
+      id: '/app/learn/$slug'
+      path: '/$slug'
+      fullPath: '/app/learn/$slug'
+      preLoaderRoute: typeof AppLearnSlugRouteImport
+      parentRoute: typeof AppLearnRoute
+    }
   }
 }
 
+interface AppLearnRouteChildren {
+  AppLearnSlugRoute: typeof AppLearnSlugRoute
+  AppLearnSearchRoute: typeof AppLearnSearchRoute
+  AppLearnIndexRoute: typeof AppLearnIndexRoute
+}
+
+const AppLearnRouteChildren: AppLearnRouteChildren = {
+  AppLearnSlugRoute: AppLearnSlugRoute,
+  AppLearnSearchRoute: AppLearnSearchRoute,
+  AppLearnIndexRoute: AppLearnIndexRoute,
+}
+
+const AppLearnRouteWithChildren = AppLearnRoute._addFileChildren(
+  AppLearnRouteChildren,
+)
+
 interface AppRouteChildren {
   AppInsightsRoute: typeof AppInsightsRoute
+  AppLearnRoute: typeof AppLearnRouteWithChildren
   AppLogRoute: typeof AppLogRoute
   AppNutritionRoute: typeof AppNutritionRoute
   AppProfileRoute: typeof AppProfileRoute
@@ -378,6 +469,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppInsightsRoute: AppInsightsRoute,
+  AppLearnRoute: AppLearnRouteWithChildren,
   AppLogRoute: AppLogRoute,
   AppNutritionRoute: AppNutritionRoute,
   AppProfileRoute: AppProfileRoute,

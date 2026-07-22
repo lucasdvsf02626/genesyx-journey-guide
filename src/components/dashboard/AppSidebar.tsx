@@ -6,6 +6,7 @@ import {
   LineChart,
   UserRound,
   PenSquare,
+  BookOpen,
 } from "lucide-react";
 import {
   Sidebar,
@@ -29,6 +30,7 @@ const nav: NavItem[] = [
   { title: "Cycle", url: "/app/track", icon: CalendarDays },
   { title: "Nutrition", url: "/app/nutrition", icon: Apple },
   { title: "Insights", url: "/app/insights", icon: LineChart },
+  { title: "Learn", url: "/app/learn", icon: BookOpen },
   { title: "Daily log", url: "/app/log", icon: PenSquare },
   { title: "Profile", url: "/app/profile", icon: UserRound },
 ];
