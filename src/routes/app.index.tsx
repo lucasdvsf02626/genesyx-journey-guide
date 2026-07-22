@@ -39,6 +39,7 @@ function Overview() {
   const { readings } = usePhReadings();
   const [cycleOpen, setCycleOpen] = useState(false);
   const navigate = useNavigate();
+  const WATER_TARGET_ML = useHydrationGoal();
 
   const displayName =
     (user?.user_metadata?.full_name as string | undefined) ??
