@@ -98,7 +98,7 @@ function ArticleView({ article }: { article: LearnArticle }) {
               {getHeroImageUrl(article.heroImage) ? (
                 <img
                   src={getHeroImageUrl(article.heroImage)}
-                  alt=""
+                  alt={article.title}
                   loading="eager"
                   decoding="async"
                   className="absolute inset-0 h-full w-full object-cover"
