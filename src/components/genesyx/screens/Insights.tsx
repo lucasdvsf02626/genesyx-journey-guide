@@ -253,7 +253,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
           Icon={Droplets}
           label="Avg hydration"
           value={avgWater > 0 ? `${(avgWater / 1000).toFixed(1)}L` : "—"}
-          hint={avgWater > 0 ? `${Math.round((avgWater / WATER_TARGET_ML) * 100)}% of daily target` : "Log to start"}
+          hint={avgWater > 0 ? `${Math.round((avgWater / goalMl) * 100)}% of daily target` : "Log to start"}
         />
         <KpiCard
           Icon={CalendarCheck}
@@ -375,7 +375,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
                 <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} width={36}
                   tickFormatter={(v) => `${(v / 1000).toFixed(1)}L`} />
                 <ReferenceLine
-                  y={WATER_TARGET_ML}
+                  y={goalMl}
                   stroke="var(--muted-foreground)"
                   strokeDasharray="4 4"
                   label={{ value: "Target", position: "right", fill: "var(--muted-foreground)", fontSize: 10 }}
