@@ -498,24 +498,21 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
         </section>
       </div>
 
+      {/* Supplement adherence + Weekly summary — powered by real logs */}
+      <SupplementAndWeeklySummary />
+
       {/* Footer strip */}
       <section className="rounded-3xl border border-border bg-gradient-to-br from-primary/8 via-card to-card p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="font-display text-[16px] font-semibold">Keep the rhythm going</p>
+            <p className="font-display text-[16px] font-semibold">Your logs, always available</p>
             <p className="mt-1 text-[13.5px] text-muted-foreground">
-              A 30-second log today keeps your insights sharp.
+              Every daily log and pH reading is on the History page — one card per day.
             </p>
           </div>
-          {onOpenTracker && (
-            <button
-              type="button"
-              onClick={onOpenTracker}
-              className="inline-flex h-11 items-center gap-1 rounded-xl bg-primary px-5 text-[14px] font-semibold text-primary-foreground hover:bg-primary/90"
-            >
-              Log a vaginal pH reading <ArrowRight className="h-4 w-4" />
-            </button>
-          )}
+          <a href="/app/history" className="inline-flex h-11 items-center gap-1 rounded-xl border border-border bg-card px-5 text-[14px] font-semibold text-foreground hover:bg-muted">
+            My logs <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
       </section>
     </div>
