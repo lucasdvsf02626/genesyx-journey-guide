@@ -11,6 +11,7 @@ import {
   MEDICAL_DISCLAIMER,
   getArticleById,
   getArticleBySlug,
+  getHeroImageUrl,
   type LearnArticle,
 } from "@/lib/learn";
 
