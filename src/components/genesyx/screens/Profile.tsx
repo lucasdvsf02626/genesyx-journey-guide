@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "../ThemeToggle";
 import { useAuth } from "@/hooks/use-auth";
 import { useNavigate, Link } from "@tanstack/react-router";
-import { PartnerSection } from "../PartnerSection";
+// Partner invite surface hidden for MVP — backend is a stub.
 import { useServerFn } from "@tanstack/react-start";
 import { updateDisplayName, deleteAccount, changePassword } from "@/lib/account.functions";
 import { supabase } from "@/integrations/supabase/client";
@@ -126,7 +126,7 @@ export function ProfileScreen({ onSignIn }: { onPregnancy?: () => void; onSignIn
           </div>
         </div>
 
-        <PartnerSection />
+        {/* PartnerSection hidden — MVP backend is a stub. */}
 
         <div>
           <p className="mb-2 px-1 text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">Account</p>
