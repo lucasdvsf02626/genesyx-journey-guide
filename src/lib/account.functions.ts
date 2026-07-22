@@ -13,7 +13,7 @@ export const getProfilePrefs = createServerFn({ method: "GET" })
       .eq("id", context.userId)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    return { theme: (data?.theme as string | null) ?? "dark" };
+    return { theme: (data?.theme as string | null) ?? "light" };
   });
 
 export const updateTheme = createServerFn({ method: "POST" })
