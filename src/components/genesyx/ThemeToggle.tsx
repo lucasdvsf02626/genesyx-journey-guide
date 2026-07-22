@@ -35,7 +35,7 @@ export function useTheme() {
     fetchPrefs()
       .then((p) => {
         if (cancelled) return;
-        const t: Theme = p.theme === "light" ? "light" : "dark";
+        const t: Theme = p.theme === "dark" ? "dark" : "light";
         setTheme(t);
         applyTheme(t);
         try { localStorage.setItem(STORAGE_KEY, t); } catch {}
