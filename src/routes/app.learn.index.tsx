@@ -143,8 +143,21 @@ function LearnLanding() {
                   <Link
                     to="/app/learn/$slug"
                     params={{ slug: a.slug }}
-                    className="grid gap-2 px-5 py-4 transition-colors hover:bg-muted/50 md:grid-cols-[1fr_auto] md:items-center"
+                    className="grid gap-4 px-5 py-4 transition-colors hover:bg-muted/50 md:grid-cols-[112px_1fr_auto] md:items-center"
                   >
+                    <div
+                      className={`relative hidden aspect-[16/10] w-28 overflow-hidden rounded-md bg-gradient-to-br md:block ${CATEGORY_GRADIENT[a.category]}`}
+                    >
+                      {getHeroImageUrl(a.heroImage) && (
+                        <img
+                          src={getHeroImageUrl(a.heroImage)}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          className="absolute inset-0 h-full w-full object-cover"
+                        />
+                      )}
+                    </div>
                     <div className="min-w-0">
                       <div className="mb-1 flex items-center gap-2 text-[12px] text-muted-foreground">
                         <Badge variant="outline" className="text-[11px]">
