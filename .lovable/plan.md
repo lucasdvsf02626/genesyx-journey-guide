@@ -1,52 +1,65 @@
-## Plan
+## End-to-end platform smoke test
 
-### 1. Fix the first-time user handoff so saves work
-- Change the post-quiz email capture from a waitlist-only form into an account creation/sign-in step.
-- Use the entered email to create an authenticated app session before continuing to the dashboard.
-- Keep the route inside the existing mobile app shell.
-- If auth requires email confirmation, show a clear “confirm your email to save” state instead of sending the user into a dashboard where saves silently fail.
-- Preserve the existing sign-in page for returning users.
+I'll drive the live preview with Playwright as a real signed-in user and verify every critical flow works — UI renders, server functions return data, writes persist, guards redirect.
 
-### 2. Persist quiz answers and use them for real personalization
-- Store quiz answers in route-level state after `QuizFlow` completes.
-- Pass those answers into the results/dashboard components instead of keeping output static.
-- Personalize:
-  - readiness summary cards
-  - next steps
-  - dashboard “today” copy
-  - nutrition/supplement emphasis
-  - support priority messaging
-- Update the gender-preference copy/modal to be medically cautious and non-misleading: no promise that diet, timing, or pH can determine baby sex; frame it as personal preferences and emotional support only.
+### Test account
+Use the existing `test@genesyx.app` / `GenesyxTest2026!` account created earlier.
 
-### 3. Save cycle setup and daily logs reliably
-- Keep shared hooks generic; do not hardcode page behavior inside them.
-- Add generic auth-gated save behavior/config where needed so callers can decide what message or action to show.
-- Ensure cycle setup save uses the active session, refreshes the dashboard/track data after save, and gives friendly errors.
-- Ensure daily log save works for signed-in users and updates dashboard hydration/streak immediately.
-- For guest attempts, route users to the account step/sign-in with a clear reason rather than raw backend errors.
+### Coverage
 
-### 4. Wire dead navigation and buttons
-- Bottom tabs already switch app sections in memory; keep that behavior and ensure actions inside tabs do something visible.
-- Make “Review Plan” open an in-app supplement plan/detail dialog instead of doing nothing.
-- Make profile menu rows open lightweight detail dialogs or sign-in prompts rather than being inert.
-- Make pregnancy pathway actions resolve to a real in-app state: signed-out users are prompted to sign in; signed-in users can switch to a pregnancy preview/dashboard instead of a “coming soon” toast loop.
+**Public / marketing**
+- `/` splash + desktop intro renders
+- `/approach`, `/trust`, `/privacy`, `/terms`, `/support`, `/health-disclaimer` load with proper `<h1>` and meta
 
-### 5. Fix modal/frame behavior and spacing regressions
-- Adjust shared dialog styling so modals open centered inside the phone frame without briefly animating from outside it.
-- Remove the excessive dashboard-to-bottom-nav empty gap while keeping enough safe-area room for the tab bar.
-- Keep prior cleanup: no decorative floating motion elements in hero/home flows.
+**Auth**
+- `/auth` sign-in with test account → redirects to `/app`
+- Guest visiting `/app` → redirected to `/auth?redirect=/app`
+- Sign-out from header → returns to `/auth`
 
-### 6. Backend checks
-- Current access policies for cycle settings, daily logs, pH readings, partner invites, and profiles already allow signed-in users to manage their own rows.
-- I do not plan to add guest database writes; guest data should be converted into a real signed-in session before save.
-- If implementation reveals missing grants or profile trigger issues, I’ll add a focused migration with explicit grants and RLS policies.
+**Dashboard `/app` (overview)**
+- KPIs render with real numbers from tracking engine
+- `HydrationRingCard`, `PhNudgeCard`, `FirstRunCard` behave correctly for the test user
+- Light mode is default; theme toggle flips and persists
 
-### 7. Verification
-- Run through the critical path in-browser:
-  - homepage → quiz → account/email step → dashboard
-  - cycle setup save → dashboard updates
-  - log today save → dashboard hydration/streak updates
-  - bottom tabs and profile actions
-  - pregnancy pathway
-  - returning sign-in
-- Check console/network/server-function errors and fix anything blocking the core flow.
+**Trackers `/app/track/*`**
+- Hydration: log water, ring updates, streak recomputes
+- Vaginal pH: add a reading (4.5–9.0), appears in list + insights
+- Cycle: settings dialog saves, phase reflects
+- Sleep, Symptoms, Nutrition: log entries save
+- Verify server functions (`listDailyLogsFull`, `listPhReadings`, `getCycleSettings`, `getHydrationGoal`) return 200
+
+**Log History `/app/history`**
+- Merged daily + pH entries render newest-first
+
+**Insights `/app/insights`**
+- Charts render for signed-in user (pH trend, hydration bars, symptom heatmap)
+- Supplement adherence + weekly summary populate
+- Signed-out preview state still works
+
+**Learn `/app/learn`**
+- Category filters, search, article detail page render from `articles.json`
+- Medical disclaimer present on articles
+
+**Profile `/app/profile`**
+- Account info loads
+- `/app/profile/reminders` toggles save to `reminder_preferences`
+- Partner section renders (invite flow is known partial — will just verify UI)
+
+**Backend health**
+- Query Supabase for row counts on `daily_logs`, `ph_readings`, `cycle_settings`, `profiles`, `reminder_preferences` for the test user after writes
+- Run the tracking-engine vector test suite (`vitest run engine.test`) — expect 16/16
+- Check console + network for any 4xx/5xx during the flow
+
+### Deliverable
+
+A per-area verdict table using your 5-state schema:
+1. real & working, 2. fake/static, 3. partial, 4. blocked by backend, 5. unsafe to launch.
+Plus screenshots of any failures and the exact fix needed (no fixes applied in this pass — audit only).
+
+### Out of scope for this pass
+- Google OAuth (needs provider config check separately)
+- Email delivery (custom domain DNS — external)
+- Partner invite acceptance across two accounts
+- Payments / Shopify (not enabled)
+
+Approve and I'll run the audit and report back.
