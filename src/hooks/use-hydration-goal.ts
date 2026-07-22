@@ -1,6 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { getHydrationGoal, DEFAULT_HYDRATION_GOAL_ML } from "@/lib/hydration.functions";
+import {
+  getHydrationGoal,
+  setHydrationGoal,
+  DEFAULT_HYDRATION_GOAL_ML,
+  MIN_HYDRATION_GOAL_ML,
+  MAX_HYDRATION_GOAL_ML,
+} from "@/lib/hydration.functions";
 import { useAuth } from "@/hooks/use-auth";
 
 /**
@@ -17,4 +23,22 @@ export function useHydrationGoal(): number {
     staleTime: 5 * 60 * 1000,
   });
   return data?.goalMl ?? DEFAULT_HYDRATION_GOAL_ML;
+}
+
+export function useSetHydrationGoal() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  const setFn = useServerFn(setHydrationGoal);
+  return useMutation({
+    mutationFn: (goalMl: number) => {
+      const clamped = Math.max(
+        MIN_HYDRATION_GOAL_ML,
+        Math.min(MAX_HYDRATION_GOAL_ML, Math.round(goalMl)),
+      );
+      return setFn({ data: { goalMl: clamped } });
+    },
+    onSuccess: (res) => {
+      qc.setQueryData(["hydration-goal", user?.id ?? "anon"], res);
+    },
+  });
 }
