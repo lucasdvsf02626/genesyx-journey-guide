@@ -93,11 +93,21 @@ function LearnLanding() {
             >
               <div className="grid md:grid-cols-[1.1fr_1fr]">
                 <div
-                  className={`relative min-h-[200px] bg-gradient-to-br ${CATEGORY_GRADIENT[featured.category]}`}
+                  className={`relative min-h-[200px] overflow-hidden bg-gradient-to-br ${CATEGORY_GRADIENT[featured.category]}`}
                 >
-                  <div className="absolute inset-0 grid place-items-center">
-                    <Sparkles className="h-10 w-10 text-foreground/40" aria-hidden />
-                  </div>
+                  {getHeroImageUrl(featured.heroImage) ? (
+                    <img
+                      src={getHeroImageUrl(featured.heroImage)}
+                      alt=""
+                      loading="eager"
+                      decoding="async"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 grid place-items-center">
+                      <Sparkles className="h-10 w-10 text-foreground/40" aria-hidden />
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col gap-3 p-6">
                   <div className="flex items-center gap-2">
