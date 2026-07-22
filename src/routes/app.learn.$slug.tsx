@@ -94,8 +94,18 @@ function ArticleView({ article }: { article: LearnArticle }) {
           <div
             className={`relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br ${CATEGORY_GRADIENT[article.category]}`}
           >
-            <div className="grid min-h-[180px] place-items-center p-8">
-              <Sparkles className="h-12 w-12 text-foreground/40" aria-hidden />
+            <div className="relative grid min-h-[180px] place-items-center p-8 md:min-h-[280px]">
+              {getHeroImageUrl(article.heroImage) ? (
+                <img
+                  src={getHeroImageUrl(article.heroImage)}
+                  alt=""
+                  loading="eager"
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              ) : (
+                <Sparkles className="h-12 w-12 text-foreground/40" aria-hidden />
+              )}
             </div>
             <div className="border-t border-border bg-card p-5">
               <div className="mb-2 flex flex-wrap items-center gap-2">
