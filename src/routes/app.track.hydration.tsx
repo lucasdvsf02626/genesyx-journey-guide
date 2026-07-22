@@ -110,6 +110,41 @@ function HydrationDetail() {
             </div>
           </Panel>
 
+          <Panel title="Daily goal" description={`Between ${MIN_HYDRATION_GOAL_ML/1000}L and ${MAX_HYDRATION_GOAL_ML/1000}L. Values outside this range are clamped.`}>
+            <div className="flex flex-wrap items-end gap-3">
+              <div>
+                <label className="mb-1 block text-[12px] text-muted-foreground">Goal (ml)</label>
+                <Input
+                  type="number"
+                  inputMode="numeric"
+                  min={MIN_HYDRATION_GOAL_ML}
+                  max={MAX_HYDRATION_GOAL_ML}
+                  step={100}
+                  value={goalInput}
+                  onChange={(e) => setGoalInput(e.target.value)}
+                  className="w-32"
+                />
+              </div>
+              <Button
+                onClick={() => {
+                  if (!user) { navigate({ to: "/auth" }); return; }
+                  const raw = parseInt(goalInput || "0", 10) || 0;
+                  setGoal.mutate(raw, {
+                    onSuccess: (res) => {
+                      setGoalInput(String(res.goalMl));
+                      toast.success(`Goal set to ${(res.goalMl/1000).toFixed(1)}L`);
+                    },
+                    onError: (e) => toast.error(e instanceof Error ? e.message : "Could not save goal"),
+                  });
+                }}
+                disabled={setGoal.isPending}
+              >
+                {setGoal.isPending ? "Saving…" : "Save goal"}
+              </Button>
+              <span className="text-[12.5px] text-muted-foreground">Current: {(goalMl/1000).toFixed(1)}L</span>
+            </div>
+          </Panel>
+
           <Panel title="Last 7 days" description={`Target ${(goalMl/1000).toFixed(1)}L / day`}>
             <div className="h-[240px] w-full">
               <ResponsiveContainer>
