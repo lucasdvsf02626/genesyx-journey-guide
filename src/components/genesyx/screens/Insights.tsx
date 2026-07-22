@@ -36,6 +36,7 @@ import {
   type PhStatus,
 } from "@/hooks/use-ph";
 import { useHydrationGoal } from "@/hooks/use-hydration-goal";
+import { useTrackingSummary as _useTrackingSummary } from "@/hooks/use-tracking-summary";
 
 const WATER_TARGET_ML = 2400;
 
