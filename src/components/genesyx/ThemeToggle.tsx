@@ -3,9 +3,10 @@ import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { useServerFn } from "@tanstack/react-start";
-import { getProfilePrefs, updateTheme } from "@/lib/account.functions";
+import { updateTheme } from "@/lib/account.functions";
 
 const STORAGE_KEY = "gx-theme";
+const USER_SET_KEY = "gx-theme-user-set";
 type Theme = "light" | "dark";
 
 function applyTheme(theme: Theme) {
@@ -16,39 +17,29 @@ function applyTheme(theme: Theme) {
 export function useTheme() {
   const { user } = useAuth();
   const [theme, setTheme] = useState<Theme>("light");
-  const fetchPrefs = useServerFn(getProfilePrefs);
   const saveTheme = useServerFn(updateTheme);
 
-  // Initial local read
+  // Light is the fixed default. Only apply dark when this browser has an
+  // explicit user choice, so old saved/profile defaults cannot flip pages dark.
   useEffect(() => {
-    const saved = (typeof window !== "undefined"
-      ? (localStorage.getItem(STORAGE_KEY) as Theme | null)
-      : null) ?? "light";
+    const saved: Theme = (() => {
+      if (typeof window === "undefined") return "light";
+      const userSetTheme = localStorage.getItem(USER_SET_KEY) === "true";
+      if (!userSetTheme) return "light";
+      return localStorage.getItem(STORAGE_KEY) === "dark" ? "dark" : "light";
+    })();
     setTheme(saved);
     applyTheme(saved);
   }, []);
-
-  // When signed in, hydrate from profile (source of truth)
-  useEffect(() => {
-    if (!user) return;
-    let cancelled = false;
-    fetchPrefs()
-      .then((p) => {
-        if (cancelled) return;
-        const t: Theme = p.theme === "dark" ? "dark" : "light";
-        setTheme(t);
-        applyTheme(t);
-        try { localStorage.setItem(STORAGE_KEY, t); } catch {}
-      })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, [user, fetchPrefs]);
 
   const toggle = useCallback(() => {
     const next: Theme = theme === "dark" ? "light" : "dark";
     setTheme(next);
     applyTheme(next);
-    try { localStorage.setItem(STORAGE_KEY, next); } catch {}
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+      localStorage.setItem(USER_SET_KEY, "true");
+    } catch {}
     if (user) {
       saveTheme({ data: { theme: next } }).catch(() => {});
     }
