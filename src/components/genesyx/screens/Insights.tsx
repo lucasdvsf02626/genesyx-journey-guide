@@ -35,10 +35,12 @@ import {
   PH_STATUS_COLOR,
   type PhStatus,
 } from "@/hooks/use-ph";
+import { useHydrationGoal } from "@/hooks/use-hydration-goal";
 
 const WATER_TARGET_ML = 2400;
 
 export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }) {
+  const goalMl = useHydrationGoal();
   const { user } = useAuth();
   const listFn = useServerFn(listDailyLogs);
   const [logs, setLogs] = useState<DailyLogRowDTO[]>([]);
