@@ -11,6 +11,7 @@ import {
   CATEGORY_ORDER,
   CATEGORY_GRADIENT,
   getArticleBySlug,
+  getHeroImageUrl,
   type LearnCategory,
 } from "@/lib/learn";
 
@@ -92,11 +93,21 @@ function LearnLanding() {
             >
               <div className="grid md:grid-cols-[1.1fr_1fr]">
                 <div
-                  className={`relative min-h-[200px] bg-gradient-to-br ${CATEGORY_GRADIENT[featured.category]}`}
+                  className={`relative min-h-[200px] overflow-hidden bg-gradient-to-br ${CATEGORY_GRADIENT[featured.category]}`}
                 >
-                  <div className="absolute inset-0 grid place-items-center">
-                    <Sparkles className="h-10 w-10 text-foreground/40" aria-hidden />
-                  </div>
+                  {getHeroImageUrl(featured.heroImage) ? (
+                    <img
+                      src={getHeroImageUrl(featured.heroImage)}
+                      alt={featured.title}
+                      loading="eager"
+                      decoding="async"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 grid place-items-center">
+                      <Sparkles className="h-10 w-10 text-foreground/40" aria-hidden />
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col gap-3 p-6">
                   <div className="flex items-center gap-2">
@@ -132,8 +143,21 @@ function LearnLanding() {
                   <Link
                     to="/app/learn/$slug"
                     params={{ slug: a.slug }}
-                    className="grid gap-2 px-5 py-4 transition-colors hover:bg-muted/50 md:grid-cols-[1fr_auto] md:items-center"
+                    className="grid gap-4 px-5 py-4 transition-colors hover:bg-muted/50 md:grid-cols-[112px_1fr_auto] md:items-center"
                   >
+                    <div
+                      className={`relative hidden aspect-[16/10] w-28 overflow-hidden rounded-md bg-gradient-to-br md:block ${CATEGORY_GRADIENT[a.category]}`}
+                    >
+                      {getHeroImageUrl(a.heroImage) && (
+                        <img
+                          src={getHeroImageUrl(a.heroImage)}
+                          alt={a.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="absolute inset-0 h-full w-full object-cover"
+                        />
+                      )}
+                    </div>
                     <div className="min-w-0">
                       <div className="mb-1 flex items-center gap-2 text-[12px] text-muted-foreground">
                         <Badge variant="outline" className="text-[11px]">

@@ -1,4 +1,32 @@
 import articlesJson from "./articles.json";
+import heroFirstWeek from "@/assets/learn/learn_hero_first_week.jpg.asset.json";
+import heroLogging from "@/assets/learn/learn_hero_logging.jpg.asset.json";
+import heroWhatToLog from "@/assets/learn/learn_hero_what_to_log.jpg.asset.json";
+import heroHydration from "@/assets/learn/learn_hero_hydration.jpg.asset.json";
+import heroEatingCycle from "@/assets/learn/learn_hero_eating_cycle.jpg.asset.json";
+import heroSupplements from "@/assets/learn/learn_hero_supplements.jpg.asset.json";
+import heroInsights from "@/assets/learn/learn_hero_insights.jpg.asset.json";
+import heroTrends from "@/assets/learn/learn_hero_trends.jpg.asset.json";
+import heroHabits from "@/assets/learn/learn_hero_habits.jpg.asset.json";
+import heroUsing from "@/assets/learn/learn_hero_using.jpg.asset.json";
+
+const HERO_IMAGE_URLS: Record<string, string> = {
+  learn_hero_first_week: heroFirstWeek.url,
+  learn_hero_logging: heroLogging.url,
+  learn_hero_what_to_log: heroWhatToLog.url,
+  learn_hero_hydration: heroHydration.url,
+  learn_hero_eating_cycle: heroEatingCycle.url,
+  learn_hero_supplements: heroSupplements.url,
+  learn_hero_insights: heroInsights.url,
+  learn_hero_trends: heroTrends.url,
+  learn_hero_habits: heroHabits.url,
+  learn_hero_using: heroUsing.url,
+};
+
+export function getHeroImageUrl(key: string | undefined | null): string | undefined {
+  if (!key) return undefined;
+  return HERO_IMAGE_URLS[key];
+}
 
 export type LearnCategory =
   | "GETTING_STARTED"
