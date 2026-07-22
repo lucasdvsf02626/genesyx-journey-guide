@@ -800,7 +800,7 @@ function SupplementAdherenceCard() {
     for (const l of logs) for (const s of l.supplements) counts.set(s, (counts.get(s) ?? 0) + 1);
     return [...counts.entries()].sort((a, b) => b[1] - a[1]);
   })();
-  const daysWith = logs.filter(l => l.supplements.length > 0).length;
+  const daysWith = logs.filter((l: { supplements: string[] }) => l.supplements.length > 0).length;
 
   return (
     <section className="rounded-3xl border border-border bg-card p-6 shadow-sm">
