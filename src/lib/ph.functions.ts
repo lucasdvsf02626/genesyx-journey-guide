@@ -65,9 +65,11 @@ export const createPhReading = createServerFn({ method: "POST" })
       .insert({
         user_id: userId,
         ph_value: Math.round(data.phValue * 10) / 10,
+        measurement_type: MEASUREMENT_TYPE_VAGINAL,
         recorded_at: data.recordedAt ?? new Date().toISOString(),
         notes: data.notes ?? null,
       })
+
       .select("id")
       .single();
     if (error) safeThrow("create", error, "Could not save reading.");
