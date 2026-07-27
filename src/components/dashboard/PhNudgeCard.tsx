@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { usePhReadings, phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR } from "@/hooks/use-ph";
+import { usePhReadings, phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR, PH_RANGE_TEXT } from "@/hooks/use-ph";
 
 function relativeTime(iso: string): string {
   const diffMs = Date.now() - new Date(iso).getTime();
