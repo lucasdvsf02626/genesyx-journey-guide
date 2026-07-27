@@ -24,7 +24,9 @@ export const Route = createFileRoute("/trust")({
         content:
           "How Genesyx handles your data: encryption in transit and at rest, what we collect, the controls you have in your profile, and our health-scope disclaimer.",
       },
+      { property: "og:url", content: "https://dashboard.genesyx.co.uk/trust" },
       { property: "og:title", content: "Trust & privacy — Genesyx" },
+
       {
         property: "og:description",
         content:
