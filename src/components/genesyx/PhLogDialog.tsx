@@ -6,7 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR, usePhMutations } from "@/hooks/use-ph";
+import { phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR, PH_BAND_NOTE, PH_MIN, PH_MAX, PH_STEP, PH_DEFAULT, PH_RANGE_TEXT, clampPh, usePhMutations } from "@/hooks/use-ph";
 import type { PhReadingDTO } from "@/lib/ph.functions";
 import { cn } from "@/lib/utils";
 
