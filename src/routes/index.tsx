@@ -13,14 +13,28 @@ import splashBg from "@/assets/genesyx-splash-bg.jpg.asset.json";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Genesyx — Fertility prep, gently guided" },
-      { name: "description", content: "A premium fertility-preparation workspace: cycle awareness, nutrition guidance, and personalised insights." },
-      { property: "og:title", content: "Genesyx — Fertility prep, gently guided" },
-      { property: "og:description", content: "Personalised cycle, nutrition, and supplement support for your conception journey." },
+      { title: "Genesyx — Plan your conception journey with clarity" },
+      {
+        name: "description",
+        content:
+          "Track your cycle, vaginal pH, nutrition and daily signals in one calm workspace. Take the 3-minute quiz for personalised fertility-preparation guidance.",
+      },
+      { property: "og:title", content: "Genesyx — Plan your conception journey with clarity" },
+      {
+        property: "og:description",
+        content:
+          "Cycle awareness, vaginal pH tracking, nutrition and supplement support — personalised in under 3 minutes.",
+      },
+      { property: "og:url", content: "https://dashboard.genesyx.co.uk/" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://dashboard.genesyx.co.uk/" },
+      { rel: "preload", as: "image", href: splashBg.url, fetchpriority: "high" },
     ],
   }),
   component: Index,
 });
+
 
 type Flow = "splash" | "intro" | "quiz" | "results" | "waitlist";
 
