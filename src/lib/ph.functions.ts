@@ -17,7 +17,7 @@ export type PhReadingDTO = {
   notes: string | null;
 };
 
-const PhValue = z.number().min(4.5).max(9.0);
+const PhValue = z.number().min(PH_MIN).max(PH_MAX);
 const IsoDate = z.string().min(1).max(64);
 
 export const listPhReadings = createServerFn({ method: "GET" })
