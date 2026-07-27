@@ -33,8 +33,12 @@ import {
   phStatus,
   PH_STATUS_LABEL,
   PH_STATUS_COLOR,
+  PH_BANDS,
+  PH_MIN,
+  PH_MAX,
   type PhStatus,
 } from "@/hooks/use-ph";
+
 import { useHydrationGoal } from "@/hooks/use-hydration-goal";
 import { useTrackingSummary as _useTrackingSummary } from "@/hooks/use-tracking-summary";
 
