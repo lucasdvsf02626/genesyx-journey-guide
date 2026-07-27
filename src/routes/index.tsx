@@ -204,7 +204,8 @@ function DesktopSplash({ onStart, onSignIn }: { onStart: () => void; onSignIn: (
             </div>
           </div>
         </div>
-      </section>
+      </main>
+
     </div>
   );
 }
