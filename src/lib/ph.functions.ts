@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { PH_MIN, PH_MAX } from "@/lib/ph/scale";
+import { PH_MIN, PH_MAX, MEASUREMENT_TYPE_VAGINAL } from "@/lib/ph/scale";
 
 
 function safeThrow(scope: string, err: unknown, userMessage: string): never {
