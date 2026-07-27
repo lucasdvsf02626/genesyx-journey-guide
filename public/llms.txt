@@ -1,0 +1,21 @@
+# Genesyx
+
+> A premium fertility-preparation workspace: cycle awareness, vaginal pH tracking, nutrition guidance, and personalised insights. Educational wellness support — not a medical device.
+
+Genesyx helps people preparing for conception understand their cycle, track daily
+signals (mood, energy, symptoms, sleep, hydration, supplements, vaginal pH), and
+receive gentle weekly observations. The tracking workspace itself is private and
+requires an account; the pages below are the public, readable surface.
+
+## Pages
+
+- [Home](/): What Genesyx is, who it's for, and the personalised intake quiz.
+- [Approach](/approach): The philosophy behind gently-guided fertility preparation and how the guidance is built.
+- [Trust](/trust): How data is stored, secured, and kept private, plus what Genesyx deliberately does not do.
+- [Support](/support): How to get help, common questions, and contact details.
+
+## Optional
+
+- [Privacy Policy](/privacy): What personal data is collected, how it is used, and your choices.
+- [Terms of Service](/terms): The terms covering use of Genesyx.
+- [Health Disclaimer](/health-disclaimer): Genesyx is educational and is not medical advice, diagnosis, or treatment.
