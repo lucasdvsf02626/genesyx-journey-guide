@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { PH_MIN, PH_MAX } from "@/lib/ph/scale";
+import { PH_MIN, PH_MAX, MEASUREMENT_TYPE_VAGINAL } from "@/lib/ph/scale";
 
 
 function safeThrow(scope: string, err: unknown, userMessage: string): never {
@@ -65,9 +65,11 @@ export const createPhReading = createServerFn({ method: "POST" })
       .insert({
         user_id: userId,
         ph_value: Math.round(data.phValue * 10) / 10,
+        measurement_type: MEASUREMENT_TYPE_VAGINAL,
         recorded_at: data.recordedAt ?? new Date().toISOString(),
         notes: data.notes ?? null,
       })
+
       .select("id")
       .single();
     if (error) safeThrow("create", error, "Could not save reading.");
