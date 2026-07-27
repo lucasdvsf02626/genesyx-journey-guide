@@ -68,9 +68,14 @@ export function QuizResults({
 
   return (
     <div className="gx-screen flex min-h-full flex-col px-6 pt-2 pb-8">
-      <button onClick={onBack} className="-ml-2 flex h-11 w-11 items-center justify-center text-foreground">
-        <ChevronLeft className="h-5 w-5" />
+      <button
+        onClick={onBack}
+        aria-label="Go back"
+        className="-ml-2 flex h-11 w-11 items-center justify-center text-foreground"
+      >
+        <ChevronLeft className="h-5 w-5" aria-hidden />
       </button>
+
 
       <div className="mt-2 flex flex-col items-center text-center">
         <Badge className="mt-5 rounded-full border-none bg-[color-mix(in_oklab,var(--electric-lavender)_10%,white)] px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-primary">
