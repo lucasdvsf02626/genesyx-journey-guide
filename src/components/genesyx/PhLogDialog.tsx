@@ -127,7 +127,7 @@ export function PhLogDialog({ open, onOpenChange, editing }: Props) {
             <button
               type="button"
               aria-label="Increase"
-              onClick={() => setPhValue((v) => clamp(v + 0.1))}
+              onClick={() => setPhValue((v) => clamp(v + PH_STEP))}
               className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-foreground/80 active:scale-95"
             >
               <Plus className="h-5 w-5" />
