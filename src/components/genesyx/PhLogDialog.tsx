@@ -100,7 +100,11 @@ export function PhLogDialog({ open, onOpenChange, editing }: Props) {
             >
               {PH_STATUS_LABEL[status]}
             </div>
+            <p className="mx-auto mt-2 max-w-[46ch] text-[11.5px] leading-relaxed text-muted-foreground">
+              {PH_BAND_NOTE[status]}
+            </p>
           </div>
+
 
           <div className="flex items-center gap-3">
             <button
