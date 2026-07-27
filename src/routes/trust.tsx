@@ -226,9 +226,10 @@ function TrustPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Mail className="h-5 w-5" />
               </div>
-              <h3 className="mt-5 font-display text-[24px] font-semibold">
+              <h2 className="mt-5 font-display text-[24px] font-semibold">
                 Questions about your data?
-              </h3>
+              </h2>
+
               <p className="mt-2 text-[15px] text-muted-foreground">
                 Reach the Genesyx team via our support page and we'll get back
                 to you.
