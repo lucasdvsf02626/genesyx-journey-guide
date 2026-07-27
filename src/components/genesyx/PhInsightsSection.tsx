@@ -29,17 +29,22 @@ export function PhInsightsSection({ onOpenTracker }: { onOpenTracker?: () => voi
     let recommendation: string | null = null;
     if (last7.length >= 2 && avg7 != null) {
       const s = phStatus(avg7);
-      if (s === "acidic") {
-        insight = "Your pH has been trending acidic this week.";
-        recommendation = "Try more leafy greens, citrus, and steady hydration to gently shift toward optimal.";
-      } else if (s === "alkaline") {
-        insight = "Your pH has been trending alkaline this week.";
-        recommendation = "Balance with whole grains, lean protein, and reduce excess mineral water.";
+      if (s === "optimal") {
+        insight = "Your vaginal pH has been sitting in the typical range this week.";
+        recommendation = "Nothing to change — consistency is the goal.";
+      } else if (s === "elevated") {
+        insight = "Your vaginal pH has been slightly above the typical range this week.";
+        recommendation = "Keep logging so you can see whether this settles over the next few days.";
+      } else if (s === "high") {
+        insight = "Your vaginal pH has been well above the typical range this week.";
+        recommendation = "Worth mentioning to a clinician if it stays here. Genesyx tracks trends, it doesn't diagnose.";
       } else {
-        insight = "Your pH is sitting comfortably in the optimal range — lovely work.";
-        recommendation = "Keep your current hydration and meal rhythm; consistency is the goal.";
+        insight = "Several readings this week came back above 6.0.";
+        recommendation =
+          "Readings that high are usually a sampling artefact — semen, blood, lubricant or menses. Retest 24 hours after, away from any of those.";
       }
     }
+
 
     return { latest, previous, avg7, avg30, status, trend, insight, recommendation };
   }, [readings]);
