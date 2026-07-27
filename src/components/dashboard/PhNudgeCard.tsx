@@ -53,8 +53,9 @@ export function PhNudgeCard() {
             {user ? "Log your first vaginal pH reading" : "Sign in to log vaginal pH"}
           </p>
           <p className="mt-1 text-[11.5px] text-muted-foreground">
-            Values from 4.5–9.0. pH entries sync to your Genesyx account.
+            Values from {PH_RANGE_TEXT}. Entries sync to your Genesyx account.
           </p>
+
         </div>
       )}
     </Link>
