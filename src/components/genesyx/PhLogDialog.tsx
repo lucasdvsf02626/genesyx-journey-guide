@@ -110,19 +110,20 @@ export function PhLogDialog({ open, onOpenChange, editing }: Props) {
             <button
               type="button"
               aria-label="Decrease"
-              onClick={() => setPhValue((v) => clamp(v - 0.1))}
+              onClick={() => setPhValue((v) => clamp(v - PH_STEP))}
               className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-foreground/80 active:scale-95"
             >
               <Minus className="h-5 w-5" />
             </button>
             <Slider
-              min={4.5}
-              max={9.0}
-              step={0.1}
+              min={PH_MIN}
+              max={PH_MAX}
+              step={PH_STEP}
               value={[phValue]}
-              onValueChange={(v) => setPhValue(clamp(v[0] ?? 6.5))}
+              onValueChange={(v) => setPhValue(clamp(v[0] ?? PH_DEFAULT))}
               className="flex-1"
             />
+
             <button
               type="button"
               aria-label="Increase"
