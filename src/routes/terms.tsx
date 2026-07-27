@@ -7,9 +7,17 @@ export const Route = createFileRoute("/terms")({
     meta: [
       { title: "Terms of Service — Genesyx" },
       { name: "description", content: "Terms governing your use of the Genesyx fertility wellness app." },
+      { property: "og:title", content: "Terms of Service — Genesyx" },
+      {
+        property: "og:description",
+        content: "The terms that govern your Genesyx account, acceptable use, and the limits of our service.",
+      },
+      { property: "og:url", content: "https://dashboard.genesyx.co.uk/terms" },
     ],
+    links: [{ rel: "canonical", href: "https://dashboard.genesyx.co.uk/terms" }],
   }),
   component: TermsPage,
+
 });
 
 function TermsPage() {
