@@ -158,10 +158,15 @@ export function PhTrackerCard({ onRequireAuth }: { onRequireAuth?: () => void })
 
       {/* Legend */}
       <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
-        <LegendDot color={PH_STATUS_COLOR.acidic} label="Acidic <6.0" />
-        <LegendDot color={PH_STATUS_COLOR.optimal} label="Optimal 6.0–7.5" />
-        <LegendDot color={PH_STATUS_COLOR.alkaline} label="Alkaline >7.5" />
+        {PH_BANDS.map((b) => (
+          <LegendDot key={b.status} color={PH_STATUS_COLOR[b.status]} label={`${b.label} ${b.range}`} />
+        ))}
       </div>
+      <p className="mt-2 text-[10.5px] leading-relaxed text-muted-foreground">
+        Scale {PH_RANGE_TEXT}. A reading above 6.0 usually means something was in the sample (semen, blood, lubricant
+        or menses) — retest in 24 hours. It is not a diagnosis.
+      </p>
+
 
       {/* History */}
       {sorted.length > 0 && (
