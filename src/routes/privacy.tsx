@@ -7,9 +7,17 @@ export const Route = createFileRoute("/privacy")({
     meta: [
       { title: "Privacy Policy — Genesyx" },
       { name: "description", content: "How Genesyx collects, stores, and protects your fertility wellness data." },
+      { property: "og:title", content: "Privacy Policy — Genesyx" },
+      {
+        property: "og:description",
+        content: "What we collect, how it is secured with row-level access control, and the controls you have over your data.",
+      },
+      { property: "og:url", content: "https://dashboard.genesyx.co.uk/privacy" },
     ],
+    links: [{ rel: "canonical", href: "https://dashboard.genesyx.co.uk/privacy" }],
   }),
   component: PrivacyPage,
+
 });
 
 function PrivacyPage() {
