@@ -61,9 +61,14 @@ function PrivacyPage() {
 export function LegalLayout({ title, updated, children }: { title: string; updated: string; children: React.ReactNode }) {
   return (
     <div className="gx-screen px-5 pt-3 pb-10">
-      <Link to="/" className="-ml-2 mb-2 inline-flex h-11 w-11 items-center justify-center text-foreground">
-        <ChevronLeft className="h-5 w-5" />
+      <Link
+        to="/"
+        aria-label="Go back"
+        className="-ml-2 mb-2 inline-flex h-11 w-11 items-center justify-center text-foreground"
+      >
+        <ChevronLeft className="h-5 w-5" aria-hidden />
       </Link>
+
       <h1 className="font-display text-3xl font-semibold tracking-tight">{title}</h1>
       <p className="mt-1 text-xs text-muted-foreground">Last updated {updated}</p>
       <div className="prose prose-sm mt-6 max-w-none space-y-4 text-[14px] leading-relaxed text-foreground/85 [&_h2]:mt-6 [&_h2]:font-display [&_h2]:text-[16px] [&_h2]:font-semibold [&_h2]:text-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1.5 [&_a]:text-primary [&_a]:underline">
