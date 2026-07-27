@@ -40,7 +40,7 @@ export function BrandLogo({ className, size = 28, variant = "full", inkColor }: 
     return (
       <img
         src={logoUrl}
-        alt="Genesyx"
+        alt="Genesyx fertility workspace"
         style={{ height: size, width: "auto" }}
         className={cn("select-none object-contain dark:invert", className)}
         draggable={false}
@@ -53,7 +53,7 @@ export function BrandLogo({ className, size = 28, variant = "full", inkColor }: 
   return (
     <span
       role="img"
-      aria-label="Genesyx"
+      aria-label="Genesyx fertility workspace"
       className={cn(
         "inline-flex shrink-0 items-center justify-center",
         isWord && "dark:[&_svg_*]:!fill-current",

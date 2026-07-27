@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrustRouteImport } from './routes/trust'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as HealthDisclaimerRouteImport } from './routes/health-disclaimer'
@@ -54,6 +55,11 @@ const TermsRoute = TermsRouteImport.update({
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -205,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/health-disclaimer': typeof HealthDisclaimerRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
@@ -237,6 +244,7 @@ export interface FileRoutesByTo {
   '/health-disclaimer': typeof HealthDisclaimerRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
@@ -268,6 +276,7 @@ export interface FileRoutesById {
   '/health-disclaimer': typeof HealthDisclaimerRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
@@ -303,6 +312,7 @@ export interface FileRouteTypes {
     | '/health-disclaimer'
     | '/privacy'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/support'
     | '/terms'
     | '/trust'
@@ -335,6 +345,7 @@ export interface FileRouteTypes {
     | '/health-disclaimer'
     | '/privacy'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/support'
     | '/terms'
     | '/trust'
@@ -365,6 +376,7 @@ export interface FileRouteTypes {
     | '/health-disclaimer'
     | '/privacy'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/support'
     | '/terms'
     | '/trust'
@@ -399,6 +411,7 @@ export interface RootRouteChildren {
   HealthDisclaimerRoute: typeof HealthDisclaimerRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   TrustRoute: typeof TrustRoute
@@ -426,6 +439,13 @@ declare module '@tanstack/react-router' {
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -713,6 +733,7 @@ const rootRouteChildren: RootRouteChildren = {
   HealthDisclaimerRoute: HealthDisclaimerRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   TrustRoute: TrustRoute,

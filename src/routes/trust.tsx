@@ -24,7 +24,9 @@ export const Route = createFileRoute("/trust")({
         content:
           "How Genesyx handles your data: encryption in transit and at rest, what we collect, the controls you have in your profile, and our health-scope disclaimer.",
       },
+      { property: "og:url", content: "https://dashboard.genesyx.co.uk/trust" },
       { property: "og:title", content: "Trust & privacy — Genesyx" },
+
       {
         property: "og:description",
         content:
@@ -33,7 +35,9 @@ export const Route = createFileRoute("/trust")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://dashboard.genesyx.co.uk/trust" }],
   }),
+
   component: TrustPage,
 });
 
@@ -67,7 +71,9 @@ function TrustPage() {
 
       {/* Quick facts */}
       <section className="mx-auto w-full max-w-[1200px] px-8 pb-14">
+        <h2 className="sr-only">Quick facts</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+
           {QUICK.map(({ Icon, title, desc }) => (
             <div
               key={title}
@@ -224,9 +230,10 @@ function TrustPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Mail className="h-5 w-5" />
               </div>
-              <h3 className="mt-5 font-display text-[24px] font-semibold">
+              <h2 className="mt-5 font-display text-[24px] font-semibold">
                 Questions about your data?
-              </h3>
+              </h2>
+
               <p className="mt-2 text-[15px] text-muted-foreground">
                 Reach the Genesyx team via our support page and we'll get back
                 to you.

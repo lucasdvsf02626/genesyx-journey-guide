@@ -7,9 +7,17 @@ export const Route = createFileRoute("/health-disclaimer")({
     meta: [
       { title: "Health Disclaimer — Genesyx" },
       { name: "description", content: "Important information about the educational nature of Genesyx." },
+      { property: "og:title", content: "Health Disclaimer — Genesyx" },
+      {
+        property: "og:description",
+        content: "Genesyx is an educational wellness tool. It does not diagnose, treat, cure or prevent any medical condition.",
+      },
+      { property: "og:url", content: "https://dashboard.genesyx.co.uk/health-disclaimer" },
     ],
+    links: [{ rel: "canonical", href: "https://dashboard.genesyx.co.uk/health-disclaimer" }],
   }),
   component: HealthDisclaimerPage,
+
 });
 
 function HealthDisclaimerPage() {

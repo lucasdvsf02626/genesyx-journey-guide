@@ -13,14 +13,28 @@ import splashBg from "@/assets/genesyx-splash-bg.jpg.asset.json";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Genesyx — Fertility prep, gently guided" },
-      { name: "description", content: "A premium fertility-preparation workspace: cycle awareness, nutrition guidance, and personalised insights." },
-      { property: "og:title", content: "Genesyx — Fertility prep, gently guided" },
-      { property: "og:description", content: "Personalised cycle, nutrition, and supplement support for your conception journey." },
+      { title: "Genesyx — Plan your conception journey with clarity" },
+      {
+        name: "description",
+        content:
+          "Track your cycle, vaginal pH, nutrition and daily signals in one calm workspace. Take the 3-minute quiz for personalised fertility-preparation guidance.",
+      },
+      { property: "og:title", content: "Genesyx — Plan your conception journey with clarity" },
+      {
+        property: "og:description",
+        content:
+          "Cycle awareness, vaginal pH tracking, nutrition and supplement support — personalised in under 3 minutes.",
+      },
+      { property: "og:url", content: "https://dashboard.genesyx.co.uk/" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://dashboard.genesyx.co.uk/" },
+      { rel: "preload", as: "image", href: splashBg.url, fetchpriority: "high" },
     ],
   }),
   component: Index,
 });
+
 
 type Flow = "splash" | "intro" | "quiz" | "results" | "waitlist";
 
@@ -128,7 +142,8 @@ function DesktopSplash({ onStart, onSignIn }: { onStart: () => void; onSignIn: (
       </header>
 
       {/* Hero */}
-      <section className="relative z-10 mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-16 px-8 pt-8 pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:pt-16">
+      <main className="relative z-10 mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-16 px-8 pt-8 pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:pt-16">
+
         <div className="flex max-w-[620px] flex-col justify-center">
           <p className="font-display text-[12px] font-semibold uppercase tracking-[0.24em] text-primary">
             Step into the future of fertility
@@ -203,7 +218,8 @@ function DesktopSplash({ onStart, onSignIn }: { onStart: () => void; onSignIn: (
             </div>
           </div>
         </div>
-      </section>
+      </main>
+
     </div>
   );
 }

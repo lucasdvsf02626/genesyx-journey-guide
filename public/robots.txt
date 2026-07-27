@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Signed-in product surfaces — no value to crawlers, and gated anyway.
+Disallow: /app
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /invite
+
+Sitemap: https://dashboard.genesyx.co.uk/sitemap.xml

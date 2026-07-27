@@ -29,9 +29,28 @@ export const Route = createFileRoute("/approach")({
           "A calm, evidence-informed method for fertility preparation — designed for both partners.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://dashboard.genesyx.co.uk/approach" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://dashboard.genesyx.co.uk/approach" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: "Genesyx fertility preparation workspace",
+          serviceType: "Fertility preparation and cycle tracking",
+          description:
+            "A personalised, evidence-informed fertility-preparation workspace covering cycle awareness, vaginal pH tracking, nutrition and supplement guidance.",
+          url: "https://dashboard.genesyx.co.uk/approach",
+          provider: { "@type": "Organization", name: "Genesyx", url: "https://dashboard.genesyx.co.uk" },
+          audience: { "@type": "Audience", audienceType: "People preparing for conception" },
+        }),
+      },
+    ],
   }),
+
   component: ApproachPage,
 });
 

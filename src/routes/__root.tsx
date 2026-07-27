@@ -60,6 +60,32 @@ export const Route = createRootRoute({
       },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://dashboard.genesyx.co.uk/#organization",
+              name: "Genesyx",
+              url: "https://dashboard.genesyx.co.uk",
+              description:
+                "A premium fertility-preparation workspace: cycle awareness, vaginal pH tracking, nutrition guidance and personalised insights.",
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://dashboard.genesyx.co.uk/#website",
+              name: "Genesyx",
+              url: "https://dashboard.genesyx.co.uk",
+              publisher: { "@id": "https://dashboard.genesyx.co.uk/#organization" },
+            },
+          ],
+        }),
+      },
+    ],
+
   }),
 
   shellComponent: RootShell,

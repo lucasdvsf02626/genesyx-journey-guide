@@ -15,8 +15,16 @@ import { Loader2 } from "lucide-react";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in — Genesyx" },
+      { title: "Sign in to Genesyx" },
       { name: "description", content: "Sign in or create your Genesyx account to save your cycle, nutrition and partner info." },
+      { property: "og:title", content: "Sign in to Genesyx" },
+      {
+        property: "og:description",
+        content: "Access your Genesyx workspace to pick up your cycle, vaginal pH and nutrition tracking.",
+      },
+      { property: "og:url", content: "https://dashboard.genesyx.co.uk/auth" },
+      { name: "robots", content: "noindex" },
+
     ],
   }),
   component: AuthPage,
