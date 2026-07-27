@@ -281,13 +281,14 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
               Vaginal pH — last 30 days
             </h3>
             <p className="mt-1 text-[13px] text-muted-foreground">
-              Optimal zone shaded. Values below 6.0 read acidic, above 7.5 alkaline.
+              Optimal zone shaded. Above 6.0 is usually a sampling artefact — retest rather than read into it.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
-            <Legend swatch="#3FA37A" label="Optimal 6.0–7.5" />
-            <Legend swatch="var(--color-electric-pink, #D85A8A)" label="Acidic <6.0" />
-            <Legend swatch="var(--color-electric-lavender, #4D4DAA)" label="Alkaline >7.5" />
+            {PH_BANDS.map((b) => (
+              <Legend key={b.status} swatch={PH_STATUS_COLOR[b.status]} label={`${b.label} ${b.range}`} />
+            ))}
+
             {onOpenTracker && (
               <button
                 type="button"
