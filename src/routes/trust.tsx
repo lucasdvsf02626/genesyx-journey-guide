@@ -67,7 +67,9 @@ function TrustPage() {
 
       {/* Quick facts */}
       <section className="mx-auto w-full max-w-[1200px] px-8 pb-14">
+        <h2 className="sr-only">Quick facts</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+
           {QUICK.map(({ Icon, title, desc }) => (
             <div
               key={title}
