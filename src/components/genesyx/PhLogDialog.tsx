@@ -24,7 +24,7 @@ function toLocalInput(iso: string): string {
 
 export function PhLogDialog({ open, onOpenChange, editing }: Props) {
   const { create, update, remove } = usePhMutations();
-  const [phValue, setPhValue] = useState(6.5);
+  const [phValue, setPhValue] = useState(PH_DEFAULT);
   const [when, setWhen] = useState(() => toLocalInput(new Date().toISOString()));
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
@@ -37,14 +37,15 @@ export function PhLogDialog({ open, onOpenChange, editing }: Props) {
       setWhen(toLocalInput(editing.recordedAt));
       setNotes(editing.notes ?? "");
     } else {
-      setPhValue(6.5);
+      setPhValue(PH_DEFAULT);
       setWhen(toLocalInput(new Date().toISOString()));
       setNotes("");
     }
   }, [open, editing]);
 
   const status = phStatus(phValue);
-  const clamp = (v: number) => Math.max(4.5, Math.min(9.0, Math.round(v * 10) / 10));
+  const clamp = clampPh;
+
 
   const onSave = async () => {
     setSaving(true);
