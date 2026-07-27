@@ -5,7 +5,7 @@ import {
 import { Plus, Droplet, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { usePhReadings, phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR } from "@/hooks/use-ph";
+import { usePhReadings, phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR, PH_BANDS, PH_MIN, PH_MAX, PH_RANGE_TEXT } from "@/hooks/use-ph";
 import type { PhReadingDTO } from "@/lib/ph.functions";
 import { PhLogDialog } from "./PhLogDialog";
 import { useAuth } from "@/hooks/use-auth";
