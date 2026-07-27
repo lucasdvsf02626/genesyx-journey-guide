@@ -129,6 +129,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          measurement_type: string
           notes: string | null
           ph_value: number
           recorded_at: string
@@ -138,6 +139,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          measurement_type?: string
           notes?: string | null
           ph_value: number
           recorded_at?: string
@@ -147,6 +149,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          measurement_type?: string
           notes?: string | null
           ph_value?: number
           recorded_at?: string
