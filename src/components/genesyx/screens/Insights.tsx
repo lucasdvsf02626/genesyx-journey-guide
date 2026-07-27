@@ -91,8 +91,9 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
     const demoPh = Array.from({ length: 30 }, (_, i) => ({
       day: i,
       label: `D${i + 1}`,
-      value: +(6.3 + Math.sin(i / 3) * 0.5 + (i % 7 === 0 ? 0.3 : 0)).toFixed(2),
+      value: +(4.2 + Math.sin(i / 3) * 0.35 + (i % 7 === 0 ? 0.25 : 0)).toFixed(2),
     }));
+
     const demoHydration = [1.6, 2.1, 1.9, 2.4, 2.2, 2.5, 2.0].map((l, i) => ({
       label: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][i],
       litres: l,
