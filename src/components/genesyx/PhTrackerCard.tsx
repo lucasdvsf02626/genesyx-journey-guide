@@ -123,14 +123,21 @@ export function PhTrackerCard({ onRequireAuth }: { onRequireAuth?: () => void })
                 stroke="var(--border)"
               />
               <YAxis
-                domain={[4.5, 9.0]}
-                ticks={[4.5, 6.0, 7.5, 9.0]}
+                domain={[PH_MIN, PH_MAX]}
+                ticks={[3.5, 4.5, 5.5, 6.0, 7.0]}
                 tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
                 stroke="var(--border)"
               />
-              <ReferenceArea y1={4.5} y2={6.0} fill={PH_STATUS_COLOR.acidic} fillOpacity={0.12} />
-              <ReferenceArea y1={6.0} y2={7.5} fill={PH_STATUS_COLOR.optimal} fillOpacity={0.14} />
-              <ReferenceArea y1={7.5} y2={9.0} fill={PH_STATUS_COLOR.alkaline} fillOpacity={0.12} />
+              {PH_BANDS.map((b) => (
+                <ReferenceArea
+                  key={b.status}
+                  y1={b.from}
+                  y2={b.to}
+                  fill={PH_STATUS_COLOR[b.status]}
+                  fillOpacity={b.status === "retest" ? 0.08 : 0.13}
+                />
+              ))}
+
               <Tooltip
                 contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", fontSize: 12 }}
                 labelFormatter={(t) => new Date(Number(t)).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
