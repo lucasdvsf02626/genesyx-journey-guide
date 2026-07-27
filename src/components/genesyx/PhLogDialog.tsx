@@ -86,7 +86,7 @@ export function PhLogDialog({ open, onOpenChange, editing }: Props) {
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <DialogTitle>{editing ? "Edit vaginal pH reading" : "Log vaginal pH reading"}</DialogTitle>
-          <DialogDescription>Track your vaginal pH from 4.5 to 9.0.</DialogDescription>
+          <DialogDescription>Track your vaginal pH from {PH_RANGE_TEXT}.</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5">
