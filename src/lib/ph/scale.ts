@@ -19,6 +19,13 @@ export const PH_MAX = 7.0;
 export const PH_STEP = 0.1;
 export const PH_DEFAULT = 4.2;
 
+/**
+ * Stamped on every reading this app writes. The DB column is
+ * `ph_readings.measurement_type` and its range check is scoped to this value.
+ */
+export const MEASUREMENT_TYPE_VAGINAL = "vaginal" as const;
+
+
 /** Upper bounds (inclusive) for each band, in order. */
 export const PH_BAND_OPTIMAL_MAX = 4.5;
 export const PH_BAND_ELEVATED_MAX = 5.5;
