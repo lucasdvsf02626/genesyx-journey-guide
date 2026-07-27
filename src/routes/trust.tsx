@@ -35,7 +35,9 @@ export const Route = createFileRoute("/trust")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://dashboard.genesyx.co.uk/trust" }],
   }),
+
   component: TrustPage,
 });
 
