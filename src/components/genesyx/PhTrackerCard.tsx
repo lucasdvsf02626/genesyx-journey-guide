@@ -5,7 +5,7 @@ import {
 import { Plus, Droplet, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { usePhReadings, phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR } from "@/hooks/use-ph";
+import { usePhReadings, phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR, PH_BANDS, PH_MIN, PH_MAX, PH_RANGE_TEXT } from "@/hooks/use-ph";
 import type { PhReadingDTO } from "@/lib/ph.functions";
 import { PhLogDialog } from "./PhLogDialog";
 import { useAuth } from "@/hooks/use-auth";
@@ -123,14 +123,21 @@ export function PhTrackerCard({ onRequireAuth }: { onRequireAuth?: () => void })
                 stroke="var(--border)"
               />
               <YAxis
-                domain={[4.5, 9.0]}
-                ticks={[4.5, 6.0, 7.5, 9.0]}
+                domain={[PH_MIN, PH_MAX]}
+                ticks={[3.5, 4.5, 5.5, 6.0, 7.0]}
                 tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
                 stroke="var(--border)"
               />
-              <ReferenceArea y1={4.5} y2={6.0} fill={PH_STATUS_COLOR.acidic} fillOpacity={0.12} />
-              <ReferenceArea y1={6.0} y2={7.5} fill={PH_STATUS_COLOR.optimal} fillOpacity={0.14} />
-              <ReferenceArea y1={7.5} y2={9.0} fill={PH_STATUS_COLOR.alkaline} fillOpacity={0.12} />
+              {PH_BANDS.map((b) => (
+                <ReferenceArea
+                  key={b.status}
+                  y1={b.from}
+                  y2={b.to}
+                  fill={PH_STATUS_COLOR[b.status]}
+                  fillOpacity={b.status === "retest" ? 0.08 : 0.13}
+                />
+              ))}
+
               <Tooltip
                 contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", fontSize: 12 }}
                 labelFormatter={(t) => new Date(Number(t)).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
@@ -151,10 +158,15 @@ export function PhTrackerCard({ onRequireAuth }: { onRequireAuth?: () => void })
 
       {/* Legend */}
       <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
-        <LegendDot color={PH_STATUS_COLOR.acidic} label="Acidic <6.0" />
-        <LegendDot color={PH_STATUS_COLOR.optimal} label="Optimal 6.0–7.5" />
-        <LegendDot color={PH_STATUS_COLOR.alkaline} label="Alkaline >7.5" />
+        {PH_BANDS.map((b) => (
+          <LegendDot key={b.status} color={PH_STATUS_COLOR[b.status]} label={`${b.label} ${b.range}`} />
+        ))}
       </div>
+      <p className="mt-2 text-[10.5px] leading-relaxed text-muted-foreground">
+        Scale {PH_RANGE_TEXT}. A reading above 6.0 usually means something was in the sample (semen, blood, lubricant
+        or menses) — retest in 24 hours. It is not a diagnosis.
+      </p>
+
 
       {/* History */}
       {sorted.length > 0 && (

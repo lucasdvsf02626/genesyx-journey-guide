@@ -33,8 +33,12 @@ import {
   phStatus,
   PH_STATUS_LABEL,
   PH_STATUS_COLOR,
+  PH_BANDS,
+  PH_MIN,
+  PH_MAX,
   type PhStatus,
 } from "@/hooks/use-ph";
+
 import { useHydrationGoal } from "@/hooks/use-hydration-goal";
 import { useTrackingSummary as _useTrackingSummary } from "@/hooks/use-tracking-summary";
 
@@ -91,8 +95,9 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
     const demoPh = Array.from({ length: 30 }, (_, i) => ({
       day: i,
       label: `D${i + 1}`,
-      value: +(6.3 + Math.sin(i / 3) * 0.5 + (i % 7 === 0 ? 0.3 : 0)).toFixed(2),
+      value: +(4.2 + Math.sin(i / 3) * 0.35 + (i % 7 === 0 ? 0.25 : 0)).toFixed(2),
     }));
+
     const demoHydration = [1.6, 2.1, 1.9, 2.4, 2.2, 2.5, 2.0].map((l, i) => ({
       label: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][i],
       litres: l,
@@ -147,7 +152,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
             <div className="mb-3 flex items-center justify-between">
               <div>
                 <p className="font-display text-[16px] font-semibold">Vaginal pH trend · sample</p>
-                <p className="text-[12px] text-muted-foreground">30-day preview with optimal zone (6.0–7.5)</p>
+                <p className="text-[12px] text-muted-foreground">30-day preview with optimal zone (3.5–4.5)</p>
               </div>
               <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] text-muted-foreground">Demo data</span>
             </div>
@@ -156,9 +161,10 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
                 <LineChart data={demoPh} margin={{ top: 8, right: 12, left: -8, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                   <XAxis dataKey="label" tick={{ fontSize: 11 }} interval={4} axisLine={false} tickLine={false} />
-                  <YAxis domain={[5.5, 8]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <ReferenceArea y1={6.0} y2={7.5} fill="hsl(var(--primary))" fillOpacity={0.08} />
-                  <ReferenceLine y={7} stroke="hsl(var(--muted-foreground))" strokeDasharray="2 2" />
+                  <YAxis domain={[PH_MIN, PH_MAX]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <ReferenceArea y1={PH_MIN} y2={4.5} fill="hsl(var(--primary))" fillOpacity={0.08} />
+                  <ReferenceLine y={4.5} stroke="hsl(var(--muted-foreground))" strokeDasharray="2 2" />
+
                   <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2.5} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
@@ -275,13 +281,14 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
               Vaginal pH — last 30 days
             </h3>
             <p className="mt-1 text-[13px] text-muted-foreground">
-              Optimal zone shaded. Values below 6.0 read acidic, above 7.5 alkaline.
+              Optimal zone shaded. Above 6.0 is usually a sampling artefact — retest rather than read into it.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
-            <Legend swatch="#3FA37A" label="Optimal 6.0–7.5" />
-            <Legend swatch="var(--color-electric-pink, #D85A8A)" label="Acidic <6.0" />
-            <Legend swatch="var(--color-electric-lavender, #4D4DAA)" label="Alkaline >7.5" />
+            {PH_BANDS.map((b) => (
+              <Legend key={b.status} swatch={PH_STATUS_COLOR[b.status]} label={`${b.label} ${b.range}`} />
+            ))}
+
             {onOpenTracker && (
               <button
                 type="button"
@@ -313,15 +320,16 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
                   interval={4}
                 />
                 <YAxis
-                  domain={[4.5, 8.5]}
-                  ticks={[5, 6, 7, 8]}
+                  domain={[PH_MIN, PH_MAX]}
+                  ticks={[3.5, 4.5, 5.5, 6.0, 7.0]}
                   stroke="var(--muted-foreground)"
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
                   width={28}
                 />
-                <ReferenceArea y1={6} y2={7.5} fill="#3FA37A" fillOpacity={0.08} />
+                <ReferenceArea y1={PH_MIN} y2={4.5} fill="#3FA37A" fillOpacity={0.08} />
+
                 <Tooltip
                   cursor={{ stroke: "var(--border)", strokeDasharray: "3 3" }}
                   content={<PhTooltip />}

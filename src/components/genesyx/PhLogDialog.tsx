@@ -6,7 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR, usePhMutations } from "@/hooks/use-ph";
+import { phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR, PH_BAND_NOTE, PH_MIN, PH_MAX, PH_STEP, PH_DEFAULT, PH_RANGE_TEXT, clampPh, usePhMutations } from "@/hooks/use-ph";
 import type { PhReadingDTO } from "@/lib/ph.functions";
 import { cn } from "@/lib/utils";
 
@@ -24,7 +24,7 @@ function toLocalInput(iso: string): string {
 
 export function PhLogDialog({ open, onOpenChange, editing }: Props) {
   const { create, update, remove } = usePhMutations();
-  const [phValue, setPhValue] = useState(6.5);
+  const [phValue, setPhValue] = useState(PH_DEFAULT);
   const [when, setWhen] = useState(() => toLocalInput(new Date().toISOString()));
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
@@ -37,14 +37,15 @@ export function PhLogDialog({ open, onOpenChange, editing }: Props) {
       setWhen(toLocalInput(editing.recordedAt));
       setNotes(editing.notes ?? "");
     } else {
-      setPhValue(6.5);
+      setPhValue(PH_DEFAULT);
       setWhen(toLocalInput(new Date().toISOString()));
       setNotes("");
     }
   }, [open, editing]);
 
   const status = phStatus(phValue);
-  const clamp = (v: number) => Math.max(4.5, Math.min(9.0, Math.round(v * 10) / 10));
+  const clamp = clampPh;
+
 
   const onSave = async () => {
     setSaving(true);
@@ -85,7 +86,7 @@ export function PhLogDialog({ open, onOpenChange, editing }: Props) {
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <DialogTitle>{editing ? "Edit vaginal pH reading" : "Log vaginal pH reading"}</DialogTitle>
-          <DialogDescription>Track your vaginal pH from 4.5 to 9.0.</DialogDescription>
+          <DialogDescription>Track your vaginal pH from {PH_RANGE_TEXT}.</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5">
@@ -99,29 +100,34 @@ export function PhLogDialog({ open, onOpenChange, editing }: Props) {
             >
               {PH_STATUS_LABEL[status]}
             </div>
+            <p className="mx-auto mt-2 max-w-[46ch] text-[11.5px] leading-relaxed text-muted-foreground">
+              {PH_BAND_NOTE[status]}
+            </p>
           </div>
+
 
           <div className="flex items-center gap-3">
             <button
               type="button"
               aria-label="Decrease"
-              onClick={() => setPhValue((v) => clamp(v - 0.1))}
+              onClick={() => setPhValue((v) => clamp(v - PH_STEP))}
               className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-foreground/80 active:scale-95"
             >
               <Minus className="h-5 w-5" />
             </button>
             <Slider
-              min={4.5}
-              max={9.0}
-              step={0.1}
+              min={PH_MIN}
+              max={PH_MAX}
+              step={PH_STEP}
               value={[phValue]}
-              onValueChange={(v) => setPhValue(clamp(v[0] ?? 6.5))}
+              onValueChange={(v) => setPhValue(clamp(v[0] ?? PH_DEFAULT))}
               className="flex-1"
             />
+
             <button
               type="button"
               aria-label="Increase"
-              onClick={() => setPhValue((v) => clamp(v + 0.1))}
+              onClick={() => setPhValue((v) => clamp(v + PH_STEP))}
               className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-foreground/80 active:scale-95"
             >
               <Plus className="h-5 w-5" />

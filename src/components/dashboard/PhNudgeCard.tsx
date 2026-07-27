@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { usePhReadings, phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR } from "@/hooks/use-ph";
+import { usePhReadings, phStatus, PH_STATUS_LABEL, PH_STATUS_COLOR, PH_RANGE_TEXT } from "@/hooks/use-ph";
 
 function relativeTime(iso: string): string {
   const diffMs = Date.now() - new Date(iso).getTime();
@@ -53,8 +53,9 @@ export function PhNudgeCard() {
             {user ? "Log your first vaginal pH reading" : "Sign in to log vaginal pH"}
           </p>
           <p className="mt-1 text-[11.5px] text-muted-foreground">
-            Values from 4.5–9.0. pH entries sync to your Genesyx account.
+            Values from {PH_RANGE_TEXT}. Entries sync to your Genesyx account.
           </p>
+
         </div>
       )}
     </Link>

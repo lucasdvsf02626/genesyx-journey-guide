@@ -13,22 +13,22 @@ type Listener = () => void;
 const listeners = new Set<Listener>();
 function emit() { listeners.forEach((l) => l()); }
 
-export type PhStatus = "acidic" | "optimal" | "alkaline";
-export function phStatus(v: number): PhStatus {
-  if (v < 6.0) return "acidic";
-  if (v > 7.5) return "alkaline";
-  return "optimal";
-}
-export const PH_STATUS_LABEL: Record<PhStatus, string> = {
-  acidic: "Acidic",
-  optimal: "Optimal",
-  alkaline: "Alkaline",
-};
-export const PH_STATUS_COLOR: Record<PhStatus, string> = {
-  acidic: "var(--color-electric-pink, #D85A8A)",
-  optimal: "#3FA37A",
-  alkaline: "var(--color-electric-lavender, #4D4DAA)",
-};
+// Vaginal pH scale lives in one place — see src/lib/ph/scale.ts
+export {
+  phStatus,
+  PH_STATUS_LABEL,
+  PH_STATUS_COLOR,
+  PH_BANDS,
+  PH_BAND_NOTE,
+  PH_MIN,
+  PH_MAX,
+  PH_STEP,
+  PH_DEFAULT,
+  PH_RANGE_TEXT,
+  clampPh,
+} from "@/lib/ph/scale";
+export type { PhStatus } from "@/lib/ph/scale";
+
 
 export function usePhReadings(sinceDays: number | null = null) {
   const { user } = useAuth();
