@@ -148,7 +148,7 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
             <div className="mb-3 flex items-center justify-between">
               <div>
                 <p className="font-display text-[16px] font-semibold">Vaginal pH trend · sample</p>
-                <p className="text-[12px] text-muted-foreground">30-day preview with optimal zone (6.0–7.5)</p>
+                <p className="text-[12px] text-muted-foreground">30-day preview with optimal zone (3.5–4.5)</p>
               </div>
               <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] text-muted-foreground">Demo data</span>
             </div>
@@ -157,9 +157,10 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
                 <LineChart data={demoPh} margin={{ top: 8, right: 12, left: -8, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                   <XAxis dataKey="label" tick={{ fontSize: 11 }} interval={4} axisLine={false} tickLine={false} />
-                  <YAxis domain={[5.5, 8]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <ReferenceArea y1={6.0} y2={7.5} fill="hsl(var(--primary))" fillOpacity={0.08} />
-                  <ReferenceLine y={7} stroke="hsl(var(--muted-foreground))" strokeDasharray="2 2" />
+                  <YAxis domain={[PH_MIN, PH_MAX]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <ReferenceArea y1={PH_MIN} y2={4.5} fill="hsl(var(--primary))" fillOpacity={0.08} />
+                  <ReferenceLine y={4.5} stroke="hsl(var(--muted-foreground))" strokeDasharray="2 2" />
+
                   <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2.5} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
