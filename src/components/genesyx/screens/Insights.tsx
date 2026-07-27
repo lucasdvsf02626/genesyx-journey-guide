@@ -320,15 +320,16 @@ export function InsightsScreen({ onOpenTracker }: { onOpenTracker?: () => void }
                   interval={4}
                 />
                 <YAxis
-                  domain={[4.5, 8.5]}
-                  ticks={[5, 6, 7, 8]}
+                  domain={[PH_MIN, PH_MAX]}
+                  ticks={[3.5, 4.5, 5.5, 6.0, 7.0]}
                   stroke="var(--muted-foreground)"
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
                   width={28}
                 />
-                <ReferenceArea y1={6} y2={7.5} fill="#3FA37A" fillOpacity={0.08} />
+                <ReferenceArea y1={PH_MIN} y2={4.5} fill="#3FA37A" fillOpacity={0.08} />
+
                 <Tooltip
                   cursor={{ stroke: "var(--border)", strokeDasharray: "3 3" }}
                   content={<PhTooltip />}
