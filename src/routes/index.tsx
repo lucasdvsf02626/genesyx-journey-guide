@@ -128,7 +128,8 @@ function DesktopSplash({ onStart, onSignIn }: { onStart: () => void; onSignIn: (
       </header>
 
       {/* Hero */}
-      <section className="relative z-10 mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-16 px-8 pt-8 pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:pt-16">
+      <main className="relative z-10 mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-16 px-8 pt-8 pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:pt-16">
+
         <div className="flex max-w-[620px] flex-col justify-center">
           <p className="font-display text-[12px] font-semibold uppercase tracking-[0.24em] text-primary">
             Step into the future of fertility
